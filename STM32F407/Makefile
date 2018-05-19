@@ -23,7 +23,7 @@ LDFLAGS		+= --static -Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group \
 		   -L$(OPENCM3_DIR)/lib
 
 # Consider removing `lib` to speed this up
-all: lib countcycles.bin exercise1.bin 
+all: lib  lizard.bin 
 
 lib:
 	make -C $(OPENCM3_DIR)
