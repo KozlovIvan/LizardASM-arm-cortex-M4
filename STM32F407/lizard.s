@@ -1,9 +1,9 @@
 .syntax unified
 .cpu cortex-m4
 
-.global lizard
-.type lizard, %function
-lizard:
+.global lizard_asm
+.type lizard_asm, %function
+lizard_asm:
     # Remember the ABI: we must not destroy the values in r4 to r12.
     # Arguments are placed in r0 and r1, the return value should go in r0.
     # To be certain, we just push all of them onto the stack.
@@ -13,9 +13,9 @@ lizard:
     pop {r4-r12}
     bx lr
 
-.global loadkey
-.type loadkey, %function
-loadkey:
+.global loadkey_asm
+.type loadkey_asm, %function
+loadkey_asm:
     # Remember the ABI: we must not destroy the values in r4 to r12.
     # Arguments are placed in r0 and r1, the return value should go in r0.
     # To be certain, we just push all of them onto the stack.
@@ -25,9 +25,9 @@ loadkey:
     pop {r4-r12}
     bx lr
 
-.global loadIV
-.type loadIV, %function
-loadIV:
+.global loadIV_asm
+.type loadIV_asm, %function
+loadIV_asm:
     # Remember the ABI: we must not destroy the values in r4 to r12.
     # Arguments are placed in r0 and r1, the return value should go in r0.
     # To be certain, we just push all of them onto the stack.
@@ -37,9 +37,9 @@ loadIV:
     pop {r4-r12}
     bx lr
 
-.global initRegisters
-.type initRegisters, %function
-initRegisters:
+.global initRegisters_asm
+.type initRegisters_asm, %function
+initRegisters_asm:
     # Remember the ABI: we must not destroy the values in r4 to r12.
     # Arguments are placed in r0 and r1, the return value should go in r0.
     # To be certain, we just push all of them onto the stack.
@@ -49,9 +49,9 @@ initRegisters:
     pop {r4-r12}
     bx lr
 
-.global mixing
-.type mixing, %function
-mixing:
+.global mixing_asm
+.type mixing_asm, %function
+mixing_asm:
     # Remember the ABI: we must not destroy the values in r4 to r12.
     # Arguments are placed in r0 and r1, the return value should go in r0.
     # To be certain, we just push all of them onto the stack.
@@ -61,9 +61,9 @@ mixing:
     pop {r4-r12}
     bx lr
 
-.global keyadd
-.type keyadd, %function
-keyadd:
+.global keyadd_asm
+.type keyadd_asm, %function
+keyadd_asm:
     # Remember the ABI: we must not destroy the values in r4 to r12.
     # Arguments are placed in r0 and r1, the return value should go in r0.
     # To be certain, we just push all of them onto the stack.
@@ -73,9 +73,9 @@ keyadd:
     pop {r4-r12}
     bx lr
 
-.global diffusion
-.type diffusion, %function
-diffusion:
+.global diffusion_asm
+.type diffusion_asm, %function
+diffusion_asm:
     # Remember the ABI: we must not destroy the values in r4 to r12.
     # Arguments are placed in r0 and r1, the return value should go in r0.
     # To be certain, we just push all of them onto the stack.
@@ -85,9 +85,9 @@ diffusion:
     pop {r4-r12}
     bx lr
 
-.global NFSR1
-.type NFSR1, %function
-NFSR1:
+.global NFSR1_asm
+.type NFSR1_asm, %function
+NFSR1_asm:
     # Remember the ABI: we must not destroy the values in r4 to r12.
     # Arguments are placed in r0 and r1, the return value should go in r0.
     # To be certain, we just push all of them onto the stack.
@@ -97,9 +97,9 @@ NFSR1:
     pop {r4-r12}
     bx lr
 
-.global NFSR2
-.type NFSR2, %function
-NFSR2:
+.global NFSR2_asm
+.type NFSR2_asm, %function
+NFSR2_asm:
     # Remember the ABI: we must not destroy the values in r4 to r12.
     # Arguments are placed in r0 and r1, the return value should go in r0.
     # To be certain, we just push all of them onto the stack.
@@ -109,9 +109,9 @@ NFSR2:
     pop {r4-r12}
     bx lr
 
-.global construct
-.type construct, %function
-construct:
+.global construct_asm
+.type construct_asm, %function
+construct_asm:
     # Remember the ABI: we must not destroy the values in r4 to r12.
     # Arguments are placed in r0 and r1, the return value should go in r0.
     # To be certain, we just push all of them onto the stack.
@@ -121,9 +121,9 @@ construct:
     pop {r4-r12}
     bx lr
 
-.global initialization
-.type initialization, %function
-initialization:
+.global initialization_asm
+.type initialization_asm, %function
+initialization_asm:
     # Remember the ABI: we must not destroy the values in r4 to r12.
     # Arguments are placed in r0 and r1, the return value should go in r0.
     # To be certain, we just push all of them onto the stack.
@@ -133,9 +133,9 @@ initialization:
     pop {r4-r12}
     bx lr
 
-.global keystreamGeneration
-.type keystreamGeneration, %function
-keystreamGeneration:
+.global keystreamGeneration_asm
+.type keystreamGeneration_asm, %function
+keystreamGeneration_asm:
     # Remember the ABI: we must not destroy the values in r4 to r12.
     # Arguments are placed in r0 and r1, the return value should go in r0.
     # To be certain, we just push all of them onto the stack.
@@ -145,9 +145,9 @@ keystreamGeneration:
     pop {r4-r12}
     bx lr
 
-.global keystreamGenerationSpecification
-.type keystreamGenerationSpecification, %function
-keystreamGenerationSpecification:
+.global keystreamGenerationSpecification_asm
+.type keystreamGenerationSpecification_asm, %function
+keystreamGenerationSpecification_asm:
     # Remember the ABI: we must not destroy the values in r4 to r12.
     # Arguments are placed in r0 and r1, the return value should go in r0.
     # To be certain, we just push all of them onto the stack.
@@ -157,21 +157,9 @@ keystreamGenerationSpecification:
     pop {r4-r12}
     bx lr
 
-.global a
-.type a, %function
-a:
-    # Remember the ABI: we must not destroy the values in r4 to r12.
-    # Arguments are placed in r0 and r1, the return value should go in r0.
-    # To be certain, we just push all of them onto the stack.
-    push {r4-r12}
-    #TODO
-    # Finally, we restore the callee-saved register values and branch back.
-    pop {r4-r12}
-    bx lr
-
-.global a
-.type a, %function
-a:
+.global a_asm
+.type a_asm, %function
+a_asm:
     # Remember the ABI: we must not destroy the values in r4 to r12.
     # Arguments are placed in r0 and r1, the return value should go in r0.
     # To be certain, we just push all of them onto the stack.
