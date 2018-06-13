@@ -32,11 +32,12 @@ uint8_t NFSR2(void);
 void _construct(uint8_t*, uint8_t*, int );
 void _initialization(uint8_t*, uint8_t*);
 void keysteamGeneration(int);
-uint8_t* keystreamGenerationSpecification(int length);
+uint8_t* keystreamGenerationSpecification(int);
 uint8_t a(void);
-char* binArray2hex(uint8_t*, int);
+char* binArray2hex(uint8_t*);
 void hex2binArray(char* , uint8_t*);
 uint8_t hex2int(char);
+uint8_t* getKeystream(void);
 void test(void);
 void test1(void);
 void test2(void);
@@ -62,7 +63,7 @@ void _construct(uint8_t  *key, uint8_t *iv, int length){
     for (int i =0;i<128; ++i){
         z[i]=0;
     }
-    for(int i = 0; i <= 256; ++i){
+    for(int i = 0; i < 256; ++i){
         L[i] = 0;
         Q[i] = 0;
         T[i] = 0;
@@ -277,7 +278,7 @@ void diffusion(){
 
 void keysteamGeneration(int length){
 
-    for(int i = 0 ; i <KEYSTREAM_SIZE+128; ++i){
+    for(int i = 0 ; i <KEYSTREAM_SIZE; ++i){
         keystream[i] = 0;
     }
 
@@ -317,7 +318,7 @@ uint8_t* getKeystream(){
     return keystream;
 }
 
-char* binArray2hex(uint8_t * bin, int size) {
+char* binArray2hex(uint8_t * bin) {
     char * str = malloc(LENGTH_TEST/4);
     for (int i = 0; i < (LENGTH_TEST/4); i++) {
         int val = bin[i*4]*8 + bin[i*4+1]*4 + bin[i*4+2]*2 + bin[i*4+3]*1;
@@ -337,7 +338,7 @@ uint8_t hex2int(char ch) {
 }
 
 void hex2binArray(char* hex, uint8_t * bin) {
-    for (int i = 0; i < strlen(hex); ++i){
+    for (uint8_t i = 0; i < strlen(hex); ++i){
         int val = hex2int(hex[i]);
 
         bin[i*4 + 3] = (uint8_t) (val & 1);
@@ -358,7 +359,7 @@ void test1(){
     uint8_t IVbin[64];
     hex2binArray(IVstr, IVbin);
     _construct(Kbin, IVbin, LENGTH_TEST);
-    char* result = binArray2hex(keystream, 0);
+    char* result = binArray2hex(keystream);
     sprintf(str,"Generated keystream: %s\n", result);
     send_USART_str(str);
     free(result);
@@ -379,7 +380,7 @@ void test2(){
     uint8_t IVbin[64];
     hex2binArray(IVstr, IVbin);
     _construct(Kbin, IVbin, LENGTH_TEST);
-    char* result = binArray2hex(keystream, 0);
+    char* result = binArray2hex(keystream);
     sprintf(str,"Generated keystream: %s\n", result);
     send_USART_str(str);
     free(result);
@@ -400,7 +401,7 @@ void test3(){
     uint8_t IVbin[64];
     hex2binArray(IVstr, IVbin);
     _construct(Kbin, IVbin, LENGTH_TEST);
-    char* result = binArray2hex(keystream, 0);
+    char* result = binArray2hex(keystream);
     sprintf(str,"Generated keystream: %s\n", result);
     send_USART_str(str);
     free(result);
@@ -417,9 +418,8 @@ int main(void)
     gpio_setup();
     usart_setup(115200);
 
-    uint32_t x, y;
-    int i, j, k;
-    int failures = 0;
+    uint32_t x = 0;
+    
     char str[100];
 
     //Tests
