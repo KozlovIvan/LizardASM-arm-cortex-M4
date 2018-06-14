@@ -27,9 +27,14 @@ loadkey_asm:
     
     mov r4, 0     // initialize loop counter 
     ldr r5, =K    // load address of first element of K array
+    mov r6, 0     // offset
+    mov r7, 8     // datasize
+    mov r8, 0     // zero
 
 init_key_loop:
-    #TODO logic
+    
+    mul r6, r4, r7   //calculate offset
+    str r8, [r5, r6] //initialize zeroes
     
     add r0, r0, 1       //increment counter
     cmp r0, 119         //compare to 119
@@ -49,9 +54,14 @@ loadIV_asm:
 
     mov r4, 0      // initialize loop counter 
     ldr r5, =IV    // load address of first element of IV array
+    mov r6, 0      // offset
+    mov r7, 8      // datasize
+    mov r8, 0      // zero
 
 init_iv_loop:
-    #TODO logic
+    
+    mul r6, r4, r7      // calculate offset
+    str r8, [r5, r6]    // initialize zeroes
     
     add r0, r0, 1       //increment counter
     cmp r0, 63          //compare to 63
