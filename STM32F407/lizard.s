@@ -1,7 +1,7 @@
 .syntax unified
 .cpu cortex-m4
 
-.extern t
+.extern t, K, IV, z, L, Q, T, Ttilde, B, S, a257, keystream
 
 .global lizard_asm
 .type lizard_asm, %function

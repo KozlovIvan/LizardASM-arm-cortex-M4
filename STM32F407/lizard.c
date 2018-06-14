@@ -320,8 +320,8 @@ uint8_t* getKeystream(){
 }
 
 char* binArray2hex(uint8_t * bin) {
-    char * str = malloc(LENGTH_TEST/4);
-    for (int i = 0; i < (LENGTH_TEST/4); i++) {
+    char * str = malloc(KEYSTREAM_SIZE/4);
+    for (int i = 0; i < (KEYSTREAM_SIZE/4); i++) {
         int val = bin[i*4]*8 + bin[i*4+1]*4 + bin[i*4+2]*2 + bin[i*4+3]*1;
         sprintf(str+i, "%x", val);
     }
@@ -359,7 +359,7 @@ void test1(){
     hex2binArray(Kstr, Kbin);
     uint8_t IVbin[64];
     hex2binArray(IVstr, IVbin);
-    _construct(Kbin, IVbin, LENGTH_TEST);
+    _construct(Kbin, IVbin, KEYSTREAM_SIZE);
     char* result = binArray2hex(keystream);
     sprintf(str,"Generated keystream: %s\n", result);
     send_USART_str(str);
@@ -380,7 +380,7 @@ void test2(){
     hex2binArray(Kstr, Kbin);
     uint8_t IVbin[64];
     hex2binArray(IVstr, IVbin);
-    _construct(Kbin, IVbin, LENGTH_TEST);
+    _construct(Kbin, IVbin, KEYSTREAM_SIZE);
     char* result = binArray2hex(keystream);
     sprintf(str,"Generated keystream: %s\n", result);
     send_USART_str(str);
@@ -401,7 +401,7 @@ void test3(){
     hex2binArray(Kstr, Kbin);
     uint8_t IVbin[64];
     hex2binArray(IVstr, IVbin);
-    _construct(Kbin, IVbin, LENGTH_TEST);
+    _construct(Kbin, IVbin, KEYSTREAM_SIZE);
     char* result = binArray2hex(keystream);
     sprintf(str,"Generated keystream: %s\n", result);
     send_USART_str(str);
