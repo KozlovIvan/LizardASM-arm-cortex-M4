@@ -1,6 +1,8 @@
 .syntax unified
 .cpu cortex-m4
 
+.extern t
+
 .global lizard_asm
 .type lizard_asm, %function
 lizard_asm:
@@ -10,6 +12,9 @@ lizard_asm:
     push {r4-r12}
     #TODO
     # Finally, we restore the callee-saved register values and branch back.
+    ldr r0, =t
+    mov r1, 0
+    add r0, r1, 1
     pop {r4-r12}
     bx lr
 
@@ -168,4 +173,3 @@ a_asm:
     # Finally, we restore the callee-saved register values and branch back.
     pop {r4-r12}
     bx lr
-    

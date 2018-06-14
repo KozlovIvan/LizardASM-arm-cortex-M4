@@ -43,22 +43,23 @@ void test1(void);
 void test2(void);
 void test3(void);
 
+extern void lizard_asm(void);
 //extern uint32_t power_5_13(void);
 //extern uint32_t power(uint32_t x, uint32_t e);
-/*extern void _construct(uint8_t *key, uint8_t *iv, int length);
-extern void _initialization(uint8_t *key, uint8_t *iv);
-extern void loadkey(uint8_t *key);
-extern void loadIV(uint8_t *iv);
-extern void initRegister();
-extern void mixing();
-extern void keyadd();
-extern void diffusion();
-extern uint8_t NFSR1();
-extern uint8_t NFSR2();
-extern void keystreamGeneration(int length);
-extern uint8_t* keystreamGenerationSpecification(int length);
-extern uint8_t a();
-*/
+extern void _construct_asm(uint8_t*, uint8_t*, int);
+extern void _initialization_asm(uint8_t*, uint8_t*);
+extern void loadkey_asm(uint8_t*);
+extern void loadIV_asm(uint8_t*);
+extern void initRegister_asm(void);
+extern void mixing_asm(void);
+extern void keyadd_asm(void);
+extern void diffusion_asm(void);
+extern uint8_t NFSR1_asm(void);
+extern uint8_t NFSR2_asm(void);
+extern void keystreamGeneration_asm(int);
+extern uint8_t* keystreamGenerationSpecification_asm(int);
+extern uint8_t a_asm(void);
+
 void _construct(uint8_t  *key, uint8_t *iv, int length){
     for (int i =0;i<128; ++i){
         z[i]=0;
