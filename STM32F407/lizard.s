@@ -13,8 +13,7 @@ lizard_asm:
     #TODO
     # Finally, we restore the callee-saved register values and branch back.
     ldr r0, =t
-    mov r1, 0
-    add r0, r1, 1
+
     pop {r4-r12}
     bx lr
 
