@@ -24,7 +24,17 @@ loadkey_asm:
     # Arguments are placed in r0 and r1, the return value should go in r0.
     # To be certain, we just push all of them onto the stack.
     push {r4-r12}
-    #TODO
+    
+    mov r4, 0     // initialize loop counter 
+    ldr r5, =K    // load address of first element of K array
+
+init_key_loop:
+    #TODO logic
+    
+    add r0, r0, 1       //increment counter
+    cmp r0, 119         //compare to 119
+    ble init_key_loop   //if less or equal jump to the begining of the loop
+
     # Finally, we restore the callee-saved register values and branch back.
     pop {r4-r12}
     bx lr
@@ -36,7 +46,17 @@ loadIV_asm:
     # Arguments are placed in r0 and r1, the return value should go in r0.
     # To be certain, we just push all of them onto the stack.
     push {r4-r12}
-    #TODO
+
+    mov r4, 0      // initialize loop counter 
+    ldr r5, =IV    // load address of first element of IV array
+
+init_iv_loop:
+    #TODO logic
+    
+    add r0, r0, 1       //increment counter
+    cmp r0, 63          //compare to 63
+    ble init_iv_loop    //if less or equal jump to the begining of the loop
+
     # Finally, we restore the callee-saved register values and branch back.
     pop {r4-r12}
     bx lr
