@@ -64,7 +64,7 @@ void _construct(uint8_t  *key, uint8_t *iv, int length){
     for (int i =0;i<128; ++i){
         z[i]=0;
     }
-    for(int i = 0; i < 256; ++i){
+    for(int i = 0; i <KEYSTREAM_SIZE+128-1; ++i){
         L[i] = 0;
         Q[i] = 0;
         T[i] = 0;
@@ -283,7 +283,7 @@ void keysteamGeneration(int length){
         keystream[i] = 0;
     }
 
-    for(int i = 0; i <= length; ++i){
+    for(int i = 0; i < length; ++i){
         keystream[i] = a();
         diffusion();
         ++t;
@@ -320,9 +320,9 @@ uint8_t* getKeystream(){
 }
 
 char* binArray2hex(uint8_t * bin) {
-    char * str = malloc(KEYSTREAM_SIZE/4);
-    for (int i = 0; i < (KEYSTREAM_SIZE/4); i++) {
-        int val = bin[i*4]*8 + bin[i*4+1]*4 + bin[i*4+2]*2 + bin[i*4+3]*1;
+    char * str = calloc(LENGTH_TEST/4, sizeof(char));
+    for (int i = 0; i < (LENGTH_TEST/4); i++) {
+        uint8_t val = bin[i*4]*8 + bin[i*4+1]*4 + bin[i*4+2]*2 + bin[i*4+3]*1;
         sprintf(str+i, "%x", val);
     }
     return str;
@@ -340,7 +340,7 @@ uint8_t hex2int(char ch) {
 
 void hex2binArray(char* hex, uint8_t * bin) {
     for (uint8_t i = 0; i < strlen(hex); ++i){
-        int val = hex2int(hex[i]);
+        uint8_t val = hex2int(hex[i]);
 
         bin[i*4 + 3] = (uint8_t) (val & 1);
         bin[i*4 + 2] = (uint8_t) ((val >> 1) & 1);
@@ -349,7 +349,7 @@ void hex2binArray(char* hex, uint8_t * bin) {
     }
 }
 void test1(){
-    char str[500];
+    char str[100];
     sprintf(str,"Test 1\n");
     send_USART_str(str);
     char *Kstr = "0000000000000000FFFFFFFFFFFFFF";
@@ -359,7 +359,9 @@ void test1(){
     hex2binArray(Kstr, Kbin);
     uint8_t IVbin[64];
     hex2binArray(IVstr, IVbin);
+    send_USART_str(str);
     _construct(Kbin, IVbin, KEYSTREAM_SIZE);
+    send_USART_str(str);
     char* result = binArray2hex(keystream);
     sprintf(str,"Generated keystream: %s\n", result);
     send_USART_str(str);
@@ -370,7 +372,7 @@ void test1(){
 }
 
 void test2(){
-    char str[500];
+    char str[100];
     sprintf(str,"Test 2\n");
     send_USART_str(str);
     char *Kstr = "7893257383493a0b0f030939409205";
@@ -391,7 +393,7 @@ void test2(){
 }
 
 void test3(){
-    char str[500];
+    char str[100];
     sprintf(str,"Test 3\n");
     send_USART_str(str);
     char *Kstr = "12342f5f1234f23f234f5f234f1f41";

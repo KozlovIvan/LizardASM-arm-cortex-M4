@@ -25,20 +25,14 @@ loadkey_asm:
     # To be certain, we just push all of them onto the stack.
     push {r4-r12}
     
-    mov r4, 0     // initialize loop counter 
-    ldr r5, =K    // load address of first element of K array
-    mov r6, 0     // offset
-    mov r7, 8     // datasize
-    mov r8, 0     // zero
+    mov r4, 0 // counter
+    
+loadkey_loop:    
 
-init_key_loop:
     
-    mul r6, r4, r7   //calculate offset
-    str r8, [r5, r6] //initialize zeroes
-    
-    add r0, r0, 1       //increment counter
-    cmp r0, 119         //compare to 119
-    ble init_key_loop   //if less or equal jump to the begining of the loop
+    add r4, r4, 1       //increment counter
+    cmp r4, 119         //compare to 119
+    ble loadkey_loop   //if less or equal jump to the begining of the loop
 
     # Finally, we restore the callee-saved register values and branch back.
     pop {r4-r12}
@@ -54,18 +48,16 @@ loadIV_asm:
 
     mov r4, 0      // initialize loop counter 
     ldr r5, =IV    // load address of first element of IV array
-    mov r6, 0      // offset
-    mov r7, 8      // datasize
     mov r8, 0      // zero
 
-init_iv_loop:
+loadiv_loop:
     
     mul r6, r4, r7      // calculate offset
     str r8, [r5, r6]    // initialize zeroes
     
     add r0, r0, 1       //increment counter
     cmp r0, 63          //compare to 63
-    ble init_iv_loop    //if less or equal jump to the begining of the loop
+    ble loadiv_loop    //if less or equal jump to the begining of the loop
 
     # Finally, we restore the callee-saved register values and branch back.
     pop {r4-r12}
