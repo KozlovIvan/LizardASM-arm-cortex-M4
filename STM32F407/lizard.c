@@ -64,7 +64,7 @@ void _construct(uint8_t  *key, uint8_t *iv, int length){
     for (int i =0;i<128; ++i){
         z[i]=0;
     }
-    for(int i = 0; i <KEYSTREAM_SIZE+128-1; ++i){
+    for(int i = 0; i <KEYSTREAM_SIZE+128; ++i){
         L[i] = 0;
         Q[i] = 0;
         T[i] = 0;
