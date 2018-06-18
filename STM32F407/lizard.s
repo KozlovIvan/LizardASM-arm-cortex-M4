@@ -27,13 +27,11 @@ loadkey_asm:
 
     mov r4, 0 // counter
     ldr r5, =K // load extern symbol K (key array)
-    ldr r6, [r0]
-    str r6, [r5]
 loadkey_loop:    
-    ldr r6, [r0, #1]!
-    str r6, [r5, #1]!
+    ldr r6, [r0, r4]
+    str r6, [r5, r4]
     add r4, r4, 1       //increment counter
-    cmp r4, 118         //compare to 118
+    cmp r4, 119         //compare to 119
     ble loadkey_loop    //if less or equal jump to the begining of the loop
     # Finally, we restore the callee-saved register values and branch back.
     pop {r4-r12}
@@ -49,13 +47,11 @@ loadIV_asm:
 
     mov r4, 0      // initialize loop counter 
     ldr r5, =IV    // load address of first element of IV array
-    ldr r6, [r0]
-    str r6, [r5]
 loadiv_loop:
-    ldr r6, [r0, #1]!
-    str r6, [r5, #1]!
+    ldr r6, [r0, r4]
+    str r6, [r5, r4]
     add r4, r4, 1       //increment counter
-    cmp r4, 59         //compare to 62
+    cmp r4, 60         //compare to 62
     ble loadiv_loop    //if less or equal jump to the begining of the loop
 
     # Finally, we restore the callee-saved register values and branch back.
