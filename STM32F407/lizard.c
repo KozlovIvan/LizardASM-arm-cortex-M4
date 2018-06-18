@@ -7,23 +7,24 @@
 #define KEYSTREAM_SIZE (uint8_t)128
 #define LENGTH_TEST (uint8_t)128
 
-
-uint8_t keystream[KEYSTREAM_SIZE];
-uint8_t B[KEYSTREAM_SIZE+258][90];
-uint8_t S[KEYSTREAM_SIZE+258][31];
-uint8_t a257 = 0;
-int t = 0;
-uint8_t K[120];
-uint8_t IV[64];
-uint8_t z[128];
-uint8_t L[KEYSTREAM_SIZE+128];
-uint8_t Q[KEYSTREAM_SIZE+128];
-uint8_t T[KEYSTREAM_SIZE+128];
-uint8_t Ttilde[KEYSTREAM_SIZE+129];
-
+extern void lizard_asm(void);
+//extern uint32_t power_5_13(void);
+//extern uint32_t power(uint32_t x, uint32_t e);
+extern void _construct_asm(uint8_t*, uint8_t*, int);
+extern void _initialization_asm(uint8_t*, uint8_t*);
+extern void loadkey_asm(uint8_t*);
+extern void loadIV_asm(uint8_t*);
+extern void initRegister_asm(void);
+extern void mixing_asm(void);
+extern void keyadd_asm(void);
+extern void diffusion_asm(void);
+extern uint8_t NFSR1_asm(void);
+extern uint8_t NFSR2_asm(void);
+extern void keystreamGeneration_asm(int);
+extern uint8_t* keystreamGenerationSpecification_asm(int);
+extern uint8_t a_asm(void);
 
 void loadkey(uint8_t*);
-void loadIV(uint8_t*);
 void initRegisters(void);
 void mixing(void);
 void keyadd(void);
@@ -45,22 +46,20 @@ void test2(void);
 void test3(void);
 void test4(void);
 
-extern void lizard_asm(void);
-//extern uint32_t power_5_13(void);
-//extern uint32_t power(uint32_t x, uint32_t e);
-extern void _construct_asm(uint8_t*, uint8_t*, int);
-extern void _initialization_asm(uint8_t*, uint8_t*);
-extern void loadkey_asm(uint8_t*);
-extern void loadIV_asm(uint8_t*);
-extern void initRegister_asm(void);
-extern void mixing_asm(void);
-extern void keyadd_asm(void);
-extern void diffusion_asm(void);
-extern uint8_t NFSR1_asm(void);
-extern uint8_t NFSR2_asm(void);
-extern void keystreamGeneration_asm(int);
-extern uint8_t* keystreamGenerationSpecification_asm(int);
-extern uint8_t a_asm(void);
+uint8_t keystream[KEYSTREAM_SIZE];
+uint8_t B[KEYSTREAM_SIZE+258][90];
+uint8_t S[KEYSTREAM_SIZE+258][31];
+uint8_t a257 = 0;
+int t = 0;
+uint8_t K[120];
+uint8_t IV[64];
+uint8_t z[128];
+uint8_t L[KEYSTREAM_SIZE+128];
+uint8_t Q[KEYSTREAM_SIZE+128];
+uint8_t T[KEYSTREAM_SIZE+128];
+uint8_t Ttilde[KEYSTREAM_SIZE+129];
+
+
 
 void _construct(uint8_t  *key, uint8_t *iv, int length){
     for (int i =0;i<KEYSTREAM_SIZE; ++i){
@@ -102,18 +101,8 @@ void _initialization(uint8_t *key, uint8_t *iv){
 
 }
 
-void loadkey(uint8_t *key){
 
-    for (int i = 0; i <= 119; ++i){
-        K[i] = key[i];
-    }
-}
 
-void loadIV(uint8_t *iv){
-    for (int i = 0; i <= 63; ++i){
-        IV[i] = iv[i];
-    }
-}
 
 void initRegisters(){
 
@@ -366,6 +355,9 @@ void test1(){
     hex2binArray(IVstr, IVbin);
     send_USART_str(str);
     _construct(Kbin, IVbin, KEYSTREAM_SIZE);
+    for(int i = 0; i< 120; i++){
+        sprintf(str+i, "%x",K[i]);
+    }
     send_USART_str(str);
     char* result = binArray2hex(keystream);
     sprintf(str,"Generated keystream: %s\n", result);
@@ -388,6 +380,10 @@ void test2(){
     uint8_t IVbin[66];
     hex2binArray(IVstr, IVbin);
     _construct(Kbin, IVbin, KEYSTREAM_SIZE);
+    for(int i = 0; i< 120; i++){
+        sprintf(str+i, "%x",K[i]);
+    }
+    send_USART_str(str);
     char* result = binArray2hex(keystream);
     sprintf(str,"Generated keystream: %s\n", result);
     send_USART_str(str);
@@ -409,6 +405,10 @@ void test3(){
     uint8_t IVbin[66];
     hex2binArray(IVstr, IVbin);
     _construct(Kbin, IVbin, KEYSTREAM_SIZE);
+    for(int i = 0; i< 120; i++){
+        sprintf(str+i, "%x",K[i]);
+    }
+    send_USART_str(str);
     char* result = binArray2hex(keystream);
     sprintf(str,"Generated keystream: %s\n", result);
     send_USART_str(str);
@@ -434,8 +434,6 @@ void test4(){
         sprintf(str+i, "%x",K[i]);
     }
     send_USART_str(str);
-
-
     char* result = binArray2hex(keystream);
     sprintf(str,"Generated keystream: %s\n", result);
     send_USART_str(str);

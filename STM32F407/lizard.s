@@ -55,7 +55,7 @@ loadiv_loop:
     ldr r6, [r0, #1]!
     str r6, [r5, #1]!
     add r4, r4, 1       //increment counter
-    cmp r4, 62         //compare to 62
+    cmp r4, 59         //compare to 62
     ble loadiv_loop    //if less or equal jump to the begining of the loop
 
     # Finally, we restore the callee-saved register values and branch back.
