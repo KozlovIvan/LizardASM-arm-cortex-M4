@@ -10,7 +10,7 @@
 extern void lizard_asm(void);
 //extern uint32_t power_5_13(void);
 //extern uint32_t power(uint32_t x, uint32_t e);
-extern void _construct_asm(uint8_t*, uint8_t*, int);
+extern void _construct_asm(uint8_t*, uint8_t*);
 extern void _initialization_asm(uint8_t*, uint8_t*);
 extern void loadkey_asm(uint8_t*);
 extern void loadIV_asm(uint8_t*);
@@ -31,7 +31,7 @@ void keyadd(void);
 void diffusion(void);
 uint8_t NFSR1(void);
 uint8_t NFSR2(void);
-void _construct(uint8_t*, uint8_t*, int );
+void _construct(uint8_t*, uint8_t*);
 void _initialization(uint8_t*, uint8_t*);
 void keysteamGeneration(int);
 uint8_t* keystreamGenerationSpecification(uint8_t);
@@ -45,6 +45,11 @@ void test1(void);
 void test2(void);
 void test3(void);
 void test4(void);
+
+//for asm
+uint32_t keystream_size = KEYSTREAM_SIZE;
+//for asm
+
 
 uint8_t keystream[KEYSTREAM_SIZE];
 uint8_t B[KEYSTREAM_SIZE+258][90];
@@ -61,7 +66,7 @@ uint8_t Ttilde[KEYSTREAM_SIZE+129];
 
 
 
-void _construct(uint8_t  *key, uint8_t *iv, int length){
+void _construct(uint8_t  *key, uint8_t *iv){
     for (int i =0;i<KEYSTREAM_SIZE; ++i){
         z[i]=0;
     }
@@ -72,8 +77,8 @@ void _construct(uint8_t  *key, uint8_t *iv, int length){
         Ttilde[i] = 0;
         _initialization(key, iv);
     }
-    if(length > 0){
-        keysteamGeneration(length);
+    if(KEYSTREAM_SIZE > 0){
+        keysteamGeneration(KEYSTREAM_SIZE);
     }
 }
 
@@ -354,7 +359,7 @@ void test1(){
     uint8_t IVbin[66];
     hex2binArray(IVstr, IVbin);
     send_USART_str(str);
-    _construct(Kbin, IVbin, KEYSTREAM_SIZE);
+    _construct(Kbin, IVbin);
     for(int i = 0; i< 120; i++){
         sprintf(str+i, "%x",K[i]);
     }
@@ -379,7 +384,7 @@ void test2(){
     hex2binArray(Kstr, Kbin);
     uint8_t IVbin[66];
     hex2binArray(IVstr, IVbin);
-    _construct(Kbin, IVbin, KEYSTREAM_SIZE);
+    _construct(Kbin, IVbin);
     for(int i = 0; i< 120; i++){
         sprintf(str+i, "%x",K[i]);
     }
@@ -404,7 +409,7 @@ void test3(){
     hex2binArray(Kstr, Kbin);
     uint8_t IVbin[66];
     hex2binArray(IVstr, IVbin);
-    _construct(Kbin, IVbin, KEYSTREAM_SIZE);
+    _construct(Kbin, IVbin);
     for(int i = 0; i< 120; i++){
         sprintf(str+i, "%x",K[i]);
     }
@@ -429,7 +434,7 @@ void test4(){
     hex2binArray(Kstr, Kbin);
     uint8_t IVbin[66];
     hex2binArray(IVstr, IVbin);
-    _construct(Kbin, IVbin, KEYSTREAM_SIZE);
+    _construct(Kbin, IVbin);
     for(int i = 0; i< 120; i++){
         sprintf(str+i, "%x",K[i]);
     }
