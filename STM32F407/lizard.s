@@ -1,7 +1,7 @@
 .syntax unified
 .cpu cortex-m4
 
-.extern t, K, IV, z, L, Q, T, Ttilde, B, S, a257, keystream
+.extern t, K, IV, z, L, Q, T, Ttilde, B, S, a257, keystream, keystream_size
 
 .global lizard_asm
 .type lizard_asm, %function
@@ -64,7 +64,32 @@ _initialization_asm:
     // Arguments are placed in r0 and r1, the return value should go in r0.
     // To be certain, we just push all of them onto the stack.
     push {r4-r12}
-    //TODO
+    bl loadkey_asm
+    bl loadIV_asm
+    bl initRegisters_asm
+    ldr r5, =t
+    mov r4, 0
+    str r4, [r5]
+
+phase_2:
+    bl mixing_asm
+    add r4, r4, 1
+    str r4, [r5]
+    cmp r4, 127
+    ble phase_2
+
+
+    mov r4, 129 // counter
+    ldr r5, =t
+    str r4, [r5]
+
+phase_4:
+    bl diffusion_asm
+    add r4, r4, 1
+    str r4, [r5]
+    cmp r4, 256
+    ble phase_4
+
     // Finally, we restore the callee-saved register values and branch back.
     pop {r4-r12}
     bx lr
