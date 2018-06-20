@@ -14,7 +14,7 @@ extern void _construct_asm(uint8_t*, uint8_t*);
 extern void _initialization_asm(uint8_t*, uint8_t*);
 extern void loadkey_asm(uint8_t*);
 extern void loadIV_asm(uint8_t*);
-extern void initRegister_asm(void);
+extern void initRegisters_asm(void);
 extern void mixing_asm(void);
 extern void keyadd_asm(void);
 extern void diffusion_asm(void);
@@ -88,7 +88,7 @@ void _initialization(uint8_t *key, uint8_t *iv){
     loadkey_asm(key);
     loadIV_asm(iv);
    // t=0;
-    initRegisters();
+    initRegisters_asm();
 
     //Phase 2
     for(;t<=127; ++t){
@@ -358,18 +358,19 @@ void test1(){
     hex2binArray(Kstr, Kbin);
     uint8_t IVbin[66];
     hex2binArray(IVstr, IVbin);
-    send_USART_str(str);
     _construct(Kbin, IVbin);
     for(int i = 0; i< 120; i++){
         sprintf(str+i, "%x",K[i]);
     }
     send_USART_str(str);
+    send_USART_str("\n");
     char* result = binArray2hex(keystream);
     sprintf(str,"Generated keystream: %s\n", result);
     send_USART_str(str);
     free(result);
     sprintf(str,"Correct keystream:   %s\n", test);
     send_USART_str(str);
+    send_USART_str("\n\n");
     t=0;
 }
 
@@ -389,12 +390,14 @@ void test2(){
         sprintf(str+i, "%x",K[i]);
     }
     send_USART_str(str);
+    send_USART_str("\n");
     char* result = binArray2hex(keystream);
     sprintf(str,"Generated keystream: %s\n", result);
     send_USART_str(str);
     free(result);
     sprintf(str,"Correct keystream:   %s\n", test);
     send_USART_str(str);
+    send_USART_str("\n\n");
     t=0;
 }
 
@@ -414,12 +417,14 @@ void test3(){
         sprintf(str+i, "%x",K[i]);
     }
     send_USART_str(str);
+    send_USART_str("\n");
     char* result = binArray2hex(keystream);
     sprintf(str,"Generated keystream: %s\n", result);
     send_USART_str(str);
     free(result);
     sprintf(str,"Correct keystream:   %s\n", test);
     send_USART_str(str);
+    send_USART_str("\n\n");
     t=0;
 }
 
@@ -439,12 +444,14 @@ void test4(){
         sprintf(str+i, "%x",K[i]);
     }
     send_USART_str(str);
+    send_USART_str("\n");
     char* result = binArray2hex(keystream);
     sprintf(str,"Generated keystream: %s\n", result);
     send_USART_str(str);
     free(result);
     sprintf(str,"Correct keystream:   %s\n", test);
     send_USART_str(str);
+    send_USART_str("\n\n");
     t=0;
 }
 
@@ -455,6 +462,15 @@ int main(void)
     clock_setup();
     gpio_setup();
     usart_setup(115200);
+    char str[150];
+    send_USART_str("\n\n\n\n");
+    sprintf(str, "╦  ╦╔═╗╔═╗╦═╗╔╦╗\n║  ║╔═╝╠═╣╠╦╝ ║║\n╩═╝╩╚═╝╩ ╩╩╚══╩╝\n");
+    send_USART_str(str);
+    sprintf(str, "by Ivan Kozlov, 2018");
+    send_USART_str(str);
+    sprintf(str, "https://github.com/KozlovIvan/LizardASM-arm-cortex-M4\n");
+    send_USART_str(str);
+    send_USART_str("\n\n");
 
     //Tests
     test1();

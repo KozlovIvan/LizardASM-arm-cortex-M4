@@ -143,7 +143,48 @@ initRegisters_asm:
     // Arguments are placed in r0 and r1, the return value should go in r0.
     // To be certain, we just push all of them onto the stack.
     push {r4-r12}
-    //TODO
+    mov r4, 0       // counter
+    ldr r5, =B      // load extern symbol B
+    ldr r6, =K      // load extern symbol K
+    ldr r7, =IV     // load extern symbol IV
+    ldr r8, =S      // load extern symbol S
+
+init_register_B_p1:
+    ldr r9, [r6, r4] // i-th element of K
+    ldr r10, [r7, r4] // i-th element of IV
+    eor r11, r9, r10
+    str r11, [r5, r4]
+    add r4, r4, 1
+    cmp r4, 63
+    blt init_register_B_p1
+
+    mov r4, 64 //update counter
+init_register_B_p2:
+    ldr r9, [r6, r4]
+    str r9, [r5, r4]
+    add r4, r4, 1
+    cmp r4, 89
+    blt init_register_B_p2
+
+    mov r4, 0 // reininit counter
+    add r11, r4, 90 // counter offset
+init_register_S:
+    ldr r9, [r6, r11]
+    str r9, [r8, r4]
+    add r4,r4, 1
+    add r11, r11, 1
+    cmp r4, 28
+    blt init_register_S
+
+    ldr r9, [r6, 119]
+    eor r9, 1
+    str r9, [r8, 29]
+    mov r9, 1
+    str r9, [r8, 30]
+
+
+
+
     // Finally, we restore the callee-saved register values and branch back.
     pop {r4-r12}
     bx lr
@@ -211,18 +252,6 @@ NFSR2_asm:
 .global construct_asm
 .type construct_asm, %function
 construct_asm:
-    // Remember the ABI: we must not destroy the values in r4 to r12.
-    // Arguments are placed in r0 and r1, the return value should go in r0.
-    // To be certain, we just push all of them onto the stack.
-    push {r4-r12}
-    //TODO
-    // Finally, we restore the callee-saved register values and branch back.
-    pop {r4-r12}
-    bx lr
-
-.global initialization_asm
-.type initialization_asm, %function
-initialization_asm:
     // Remember the ABI: we must not destroy the values in r4 to r12.
     // Arguments are placed in r0 and r1, the return value should go in r0.
     // To be certain, we just push all of them onto the stack.
