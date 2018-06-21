@@ -289,6 +289,49 @@ keystreamGenerationSpecification_asm:
     pop {r4-r12}
     bx lr
 
+.global a_asm_Lt
+.type a_asm_Lt, %function
+a_asm_Lt:
+    push {r4-r12}
+    
+    ldr r4, =t
+    ldr r4, [r4]
+    mov r5, 90
+    mul r5, r4, r5 // B initial offset
+    
+    mov r6, 30
+    mul r6, r6, r4  // S initial offset
+
+    // L[t]
+    ldr r9, =B // can be reused
+    ldr r10, =L
+    
+
+    add r7, r5, 7
+    ldr r11, [r9, r7]
+    add r7, r5, 11
+    ldr r12, [r9, r7]
+    eor r12, r12, r11
+    add r7, r5, 30
+    ldr r11, [r9, r7]
+    eor r12, r12, r11
+    add r7, r5, 40
+    ldr r11, [r9, r7]
+    eor r12, r12, r11
+    add r7, r5, 45
+    ldr r11, [r9, r7]
+    eor r12, r12, r11
+    add r7, r5, 54
+    ldr r11, [r9, r7]
+    eor r12, r12, r11
+    add r7, r5, 71
+    ldr r11, [r9, r7]
+    eor r12, r12, r11
+    mov r0, r12
+
+    pop {r4-r12}
+    bx lr
+
 .global a_asm
 .type a_asm, %function
 a_asm:
@@ -296,145 +339,237 @@ a_asm:
     // Arguments are placed in r0 and r1, the return value should go in r0.
     // To be certain, we just push all of them onto the stack.
     push {r4-r12}
+    //B[keystream_size+258][90]
+    //S[keystream_size+258][31]
+    //L[keystream_size+128]
+    //Q[keystream_size+128]
+    //T[keystream_size+128]
+    //Ttilde[keystream_size+128]
+    ldr r4, =t
+    ldr r4, [r4]
+    mov r5, 90
+    mul r5, r4, r5 // B initial offset
     
-    ldr r4, =t              // load extern symbol t
-    ldr r8, =keystream_size // load extern symbol keystream_size
-    add r9, r8, 89          // offset for B
-    mul r9, r9, r4          // total offset for B
-    add r10, r8, 30         // offset for S
-    mul r10, r10, r4        // total offset for S
-    
-    ldr r5, =L              // load extern symbol L NOTE it will switch to Q, T and last to Ttilde
-    ldr r6, =B              // load extern symbol B
-    ldr r7, =S              // load extern symbol S
-    ldr r8, [r6, r9]        // get t-th array from multidimensional array
-    ldr r9, [r7, r10]
+    mov r6, 30
+    mul r6, r6, r4  // S initial offset
+
     // L[t]
-    ldr r10, [r8, 7]
-    ldr r11, [r8, 11]
-    eor r11, r11, r10
-    ldr r10, [r8, 30]
-    eor r11, r11, r10
-    ldr r10, [r8, 40]
-    eor r11, r11, r10
-    ldr r10, [r8, 45]
-    eor r11, r11, r10
-    ldr r10, [r8, 54]
-    eor r11, r11, r10
-    ldr r8, [r8, 71]
-    eor r11, r11, r10
-    str r11, [r5, r4]
+    ldr r9, =B // can be reused
+    ldr r10, =L
+    
+
+    add r7, r5, 7
+    ldr r11, [r9, r7]
+    add r7, r5, 11
+    ldr r12, [r9, r7]
+    eor r12, r12, r11
+    add r7, r5, 30
+    ldr r11, [r9, r7]
+    eor r12, r12, r11
+    add r7, r5, 40
+    ldr r11, [r9, r7]
+    eor r12, r12, r11
+    add r7, r5, 45
+    ldr r11, [r9, r7]
+    eor r12, r12, r11
+    add r7, r5, 54
+    ldr r11, [r9, r7]
+    eor r12, r12, r11
+    add r7, r5, 71
+    ldr r11, [r9, r7]
+    eor r12, r12, r11
+    str r12, [r10, r4]
     //end of L[t]
-
     //Q[t]
-    ldr r5, =Q          //load extern symbol Q
-    ldr r8, [r6, r9]    //B[t] might be redundant
-    ldr r10, [r8, 4]
-    ldr r11, [r8, 21]
-    and r11, r11, r10
-    ldr r10, [r8, 9]
-    eor r11, r11, r10
-    ldr r10, [r8, 52]
-    and r11, r11, r10
-    ldr r10, [r8, 18]
-    eor r11, r11, r10
-    ldr r10, [r8, 37]
-    and r11, r11, r10
-    ldr r10, [r8, 44]
-    eor r11, r11, r10
-    ldr r10, [r8, 76]
-    and r11, r11, r10
-    str r11, [r5, r4]
+    ldr r10, =Q          //load extern symbol Q
+    add r7, r5, 4
+    ldr r11, [r9, r7]
+    add r7, r5, 21
+    ldr r12, [r9, r7]
+    and r12, r12, r11
+    add r7, r5, 9
+    ldr r11, [r9, r7]
+    eor r12, r12, r11
+    add r7, r5, 52
+    ldr r11, [r9, r7]
+    and r12, r12, r11
+    add r7, r5, 18
+    ldr r11, [r9, r7]
+    eor r12, r12, r11
+    add r7, r5, 37
+    ldr r11, [r9, r7]
+    and r12, r12, r11
+    add r7, r5, 44
+    ldr r11, [r9, r7]
+    eor r12, r12, r11
+    add r7, r5, 76
+    ldr r11, [r9, r7]
+    and r12, r11, r11
+    str r12, [r10, r4]
     //end of Q[t]
-
     //T[t]
-    ldr r5, =T              // load extern symbol T
-    ldr r8, [r6, r9]        // might be redundant
-    ldr r10, [r8, 5]
-    ldr r11, [r8, 8]
-    eor r11, r11, r10
-    ldr r10, [r8, 82]
-    and r11, r11, r10
-    ldr r10, [r8, 34]
-    eor r11, r11, r10
-    ldr r10, [r8, 67]
-    and r11, r11, r10
-    ldr r10, [r8, 73]
-    and r11, r11, r10
-    ldr r10, [r8, 2]
-    eor r11, r11, r10
-    ldr r10, [r8, 28]
-    and r11, r11, r10
-    ldr r10, [r8, 41]
-    and r11, r11, r10
-    ldr r10, [r8, 65]
-    and r11, r11, r10
-    ldr r10, [r8, 13]
-    eor r11, r11, r10
-    ldr r10, [r8, 29]
-    and r11, r11, r10
-    ldr r10, [r8, 50]
-    and r11, r11, r10
-    ldr r10, [r8, 64]
-    and r11, r11, r10
-    ldr r10, [r8, 75]
-    and r11, r11, r10
-    ldr r10, [r8, 6]
-    eor r11, r11, r10
-    ldr r10, [r8, 14]
-    and r11, r11, r10
-    ldr r10, [r8, 26]
-    and r11, r11, r10
-    ldr r10, [r8, 32]
-    and r11, r11, r10
-    ldr r10, [r8, 47]
-    and r11, r11, r10
-    ldr r10, [r8, 61]
-    and r11, r11, r10
-    ldr r10, [r8, 1]
-    eor r11, r11, r10
-    ldr r10, [r8, 19]
-    and r11, r11, r10
-    ldr r10, [r8, 27]
-    and r11, r11, r10
-    ldr r10, [r8, 43]
-    and r11, r11, r10
-    ldr r10, [r8, 57]
-    and r11, r11, r10
-    ldr r10, [r8, 66]
-    and r11, r11, r10
-    ldr r10, [r8, 78]
-    and r11, r11, r10
-    str r11, [r5, r4]
+    ldr r10, =T              // load extern symbol T
+    add r7, r5, 5
+    ldr r11, [r9, r7]
+    add r7, r5, 8
+    ldr r12, [r9, r7]
+    eor r12, r12, r11
+    add r7, r5, 82
+    ldr r11, [r9, r7]
+    and r12, r12, r11
+    add r7, r5, 34
+    ldr r11, [r9, r7]
+    eor r12, r12, r11
+    add r7, r5, 67
+    ldr r11, [r9, r7]
+    and r12, r12, r11
+    add r7, r5, 73
+    ldr r11, [r9, r7]
+    and r12, r12, r11
+    add r7, r5, 2
+    ldr r11, [r9, r7]
+    eor r12, r12, r11
+    add r7, r5, 28
+    ldr r11, [r9, r7]
+    and r12, r12, r11
+    add r7, r5, 41
+    ldr r11, [r9, r7]
+    and r12, r12, r11
+    add r7, r5, 65
+    ldr r11, [r9, r7]
+    and r12, r12, r11
+    add r7, r5, 13
+    ldr r11, [r9, r7]
+    eor r12, r12, r11
+    add r7, r5, 29
+    ldr r11, [r9, r7]
+    and r12, r12, r11
+    add r7, r5, 50
+    ldr r11, [r9, r7]
+    and r12, r12, r11
+    add r7, r5, 64
+    ldr r11, [r9, r7]
+    and r12, r12, r11
+    add r7, r5, 75
+    ldr r11, [r9, r7]
+    and r12, r12, r11
+    add r7, r5, 6
+    ldr r11, [r9, r7]
+    eor r12, r12, r11
+    add r7, r5, 14
+    ldr r11, [r9, r7]
+    and r12, r12, r11
+    add r7, r5, 26
+    ldr r11, [r9, r7]
+    and r12, r12, r11
+    add r7, r5, 32
+    ldr r11, [r9, r7]
+    and r12, r12, r11
+    add r7, r5, 47
+    ldr r11, [r9, r7]
+    and r12, r12, r11
+    add r7, r5, 61
+    ldr r11, [r9, r7]
+    and r12, r12, r11
+    add r7, r5, 1
+    ldr r11, [r9, r7]
+    eor r12, r12, r11
+    add r7, r5, 19
+    ldr r11, [r9, r7]
+    and r12, r12, r11
+    add r7, r5, 27
+    ldr r11, [r9, r7]
+    and r12, r12, r11
+    add r7, r5, 43
+    ldr r11, [r9, r7]
+    and r12, r12, r11
+    add r7, r5, 57
+    ldr r11, [r9, r7]
+    and r12, r12, r11
+    add r7, r5, 66
+    ldr r11, [r9, r7]
+    and r12, r12, r11
+    add r7, r5, 78
+    ldr r11, [r9, r7]
+    and r12, r12, r11
+    str r12, [r10, r4]
     //end of T[t]
 
     //Ttilde
-    ldr r5, =Ttilde         // load extern symbol Ttilde
-    ldr r8, [r6, r9]        // B[t] might be redundant
-    ldr r9, [r7, r10]       // S[t] might be redundant
-    ldr r10, [r9, 23]
-    ldr r11, [r9, 3]
-    eor r11, r11, r10
-    ldr r10, [r9, 16]
-    and r11, r11, r10
-    ldr r10, [r9, 9]
-    eor r11, r11, r10
-    ldr r10, [r9, 13]
-    and r11, r11, r10
-    ldr r10, [r8, 48]
-    and r11, r11, r10
-    ldr r10, [r9, 1]
-    eor r11, r11, r10
-    ldr r10, [r9, 24]
-    and r11, r11, r10
-    ldr r10, [r8, 38]
-    and r11, r11, r10
-    ldr r10, [r8, 63]
-    and r11, r11, r10
-    str r11, [r5, r4]
+    ldr r10, =Ttilde         // load extern symbol Ttilde
+    ldr r8, =S               // load extern symbol S
+    add r7, r6, 23
+    ldr r11, [r8, r7]
+    add r7, r6, 3
+    ldr r12, [r8, r7]
+    eor r12, r12, r11
+    add r7, r6, 16
+    ldr r11, [r8, r7]
+    and r12, r12, r11
+    add r7, r6, 9
+    ldr r11, [r8, r7]
+    eor r12, r12, r11
+    add r7, r6, 13
+    ldr r11, [r8, r7]
+    and r12, r12, r11
+    add r7, r5, 48
+    ldr r11, [r9, r7]
+    and r12, r12, r11
+    add r7, r6, 1
+    ldr r11, [r8, r7]
+    eor r12, r12, r11
+    add r7, r6, 24
+    ldr r11, [r8, r7]
+    and r12, r12, r11
+    add r7, r5, 38
+    ldr r11, [r9, r7]
+    and r12, r12, r11
+    add r7, r5, 63
+    ldr r11, [r9, r7]
+    and r12, r12, r11
+    str r12, [r10, r4]
     //end of Ttilde[t]
+
+
+    ldr r4, =t
+    ldr r4, [r4] //??
+    ldr r5, =L
+    ldr r5, [r5, r4]
+    ldr r6, =Q
+    ldr r6, [r6, r4]
+    ldr r7, =T
+    ldr r7, [r7, r4]
+    ldr r8, =Ttilde
+    ldr r8, [r8, r4]
+    eor r5, r5, r6
+    eor r5, r5, r7
+    eor r5, r5, r8
+    mov r0, r5    
+    pop {r4-r12}
+    bx lr
+
+
+.global a_return
+.type a_return, %function
+a_return:
+    push {r4-r12}
     //craft return value to r0
-    //TODO
+    ldr r4, =t
+    ldr r4, [r4] //??
+    ldr r5, =L
+    ldr r5, [r5, r4]
+    ldr r6, =Q
+    ldr r6, [r6, r4]
+    ldr r7, =T
+    ldr r7, [r7, r4]
+    ldr r8, =Ttilde
+    ldr r8, [r8, r4]
+    eor r5, r5, r6
+    eor r5, r5, r7
+    eor r5, r5, r8
+    mov r0, r5    
+
+    
     // Finally, we restore the callee-saved register values and branch back.
     pop {r4-r12}
     bx lr

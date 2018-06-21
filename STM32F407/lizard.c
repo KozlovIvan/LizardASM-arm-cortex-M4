@@ -23,6 +23,8 @@ extern uint8_t NFSR2_asm(void);
 extern void keystreamGeneration_asm(int);
 extern uint8_t* keystreamGenerationSpecification_asm(int);
 extern uint8_t a_asm(void);
+extern uint8_t a_return(void);
+extern uint8_t a_asm_Lt(void);
 
 void loadkey(uint8_t*);
 void initRegisters(void);
@@ -143,11 +145,8 @@ void mixing(){
 }
 
 uint8_t a(){
-
-    L[t] = B[t][7]  ^ B[t][11] ^ \
-             B[t][30] ^ B[t][40] ^ \
-             B[t][45] ^ B[t][54] ^ \
-             B[t][71];
+    
+    L[t] = a_asm_Lt();
 
     Q[t] = B[t][4]  * B[t][21] ^ \
            B[t][9]  * B[t][52] ^ \
@@ -174,8 +173,8 @@ uint8_t a(){
                 S[t][13] * B[t][48] ^ \
                 S[t][1]  * S[t][24] * \
                 B[t][38] * B[t][63];
-
-        return L[t] ^ Q[t] ^ T[t] ^ Ttilde[t];
+        uint8_t rt = a_return();
+        return rt;
 }
 
 uint8_t NFSR2(){
