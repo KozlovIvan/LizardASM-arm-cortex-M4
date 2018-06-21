@@ -3,6 +3,13 @@
 
 .extern t, K, IV, z, L, Q, T, Ttilde, B, S, a257, keystream, keystream_size
 
+
+// ╦  ╦╔═╗╔═╗╦═╗╔╦╗
+// ║  ║╔═╝╠═╣╠╦╝ ║║
+// ╩═╝╩╚═╝╩ ╩╩╚══╩╝
+// by Ivan Kozlov, 2018
+// https://github.com/KozlovIvan/LizardASM-arm-cortex-M4
+
 .global lizard_asm
 .type lizard_asm, %function
 lizard_asm:
@@ -403,8 +410,31 @@ a_asm:
 
     //Ttilde
     ldr r5, =Ttilde         // load extern symbol Ttilde
+    ldr r8, [r6, r9]        // B[t] might be redundant
+    ldr r9, [r7, r10]       // S[t] might be redundant
+    ldr r10, [r9, 23]
+    ldr r11, [r9, 3]
+    eor r11, r11, r10
+    ldr r10, [r9, 16]
+    and r11, r11, r10
+    ldr r10, [r9, 9]
+    eor r11, r11, r10
+    ldr r10, [r9, 13]
+    and r11, r11, r10
+    ldr r10, [r8, 48]
+    and r11, r11, r10
+    ldr r10, [r9, 1]
+    eor r11, r11, r10
+    ldr r10, [r9, 24]
+    and r11, r11, r10
+    ldr r10, [r8, 38]
+    and r11, r11, r10
+    ldr r10, [r8, 63]
+    and r11, r11, r10
+    str r11, [r5, r4]
     //end of Ttilde[t]
-
+    //craft return value to r0
+    //TODO
     // Finally, we restore the callee-saved register values and branch back.
     pop {r4-r12}
     bx lr

@@ -464,7 +464,7 @@ int main(void)
     usart_setup(115200);
     char str[150];
     send_USART_str("\n\n\n\n");
-    sprintf(str, "╦  ╦╔═╗╔═╗╦═╗╔╦╗\n║  ║╔═╝╠═╣╠╦╝ ║║\n╩═╝╩╚═╝╩ ╩╩╚══╩╝\n");
+    sprintf(str, "╦  ╦╔═╗╔═╗╦═╗╔╦╗\n║  ║╔═╝╠═╣╠╦╝ ║║\n╩═╝╩╚═╝╩ ╩╩╚══╩╝");
     send_USART_str(str);
     sprintf(str, "by Ivan Kozlov, 2018");
     send_USART_str(str);
