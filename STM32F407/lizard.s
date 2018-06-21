@@ -182,9 +182,6 @@ init_register_S:
     mov r9, 1
     str r9, [r8, 30]
 
-
-
-
     // Finally, we restore the callee-saved register values and branch back.
     pop {r4-r12}
     bx lr
@@ -292,7 +289,122 @@ a_asm:
     // Arguments are placed in r0 and r1, the return value should go in r0.
     // To be certain, we just push all of them onto the stack.
     push {r4-r12}
-    //TODO
+    
+    ldr r4, =t              // load extern symbol t
+    ldr r8, =keystream_size // load extern symbol keystream_size
+    add r9, r8, 89          // offset for B
+    mul r9, r9, r4          // total offset for B
+    add r10, r8, 30         // offset for S
+    mul r10, r10, r4        // total offset for S
+    
+    ldr r5, =L              // load extern symbol L NOTE it will switch to Q, T and last to Ttilde
+    ldr r6, =B              // load extern symbol B
+    ldr r7, =S              // load extern symbol S
+    ldr r8, [r6, r9]        // get t-th array from multidimensional array
+    ldr r9, [r7, r10]
+    // L[t]
+    ldr r10, [r8, 7]
+    ldr r11, [r8, 11]
+    eor r11, r11, r10
+    ldr r10, [r8, 30]
+    eor r11, r11, r10
+    ldr r10, [r8, 40]
+    eor r11, r11, r10
+    ldr r10, [r8, 45]
+    eor r11, r11, r10
+    ldr r10, [r8, 54]
+    eor r11, r11, r10
+    ldr r8, [r8, 71]
+    eor r11, r11, r10
+    str r11, [r5, r4]
+    //end of L[t]
+
+    //Q[t]
+    ldr r5, =Q          //load extern symbol Q
+    ldr r8, [r6, r9]    //B[t] might be redundant
+    ldr r10, [r8, 4]
+    ldr r11, [r8, 21]
+    and r11, r11, r10
+    ldr r10, [r8, 9]
+    eor r11, r11, r10
+    ldr r10, [r8, 52]
+    and r11, r11, r10
+    ldr r10, [r8, 18]
+    eor r11, r11, r10
+    ldr r10, [r8, 37]
+    and r11, r11, r10
+    ldr r10, [r8, 44]
+    eor r11, r11, r10
+    ldr r10, [r8, 76]
+    and r11, r11, r10
+    str r11, [r5, r4]
+    //end of Q[t]
+
+    //T[t]
+    ldr r5, =T              // load extern symbol T
+    ldr r8, [r6, r9]        // might be redundant
+    ldr r10, [r8, 5]
+    ldr r11, [r8, 8]
+    eor r11, r11, r10
+    ldr r10, [r8, 82]
+    and r11, r11, r10
+    ldr r10, [r8, 34]
+    eor r11, r11, r10
+    ldr r10, [r8, 67]
+    and r11, r11, r10
+    ldr r10, [r8, 73]
+    and r11, r11, r10
+    ldr r10, [r8, 2]
+    eor r11, r11, r10
+    ldr r10, [r8, 28]
+    and r11, r11, r10
+    ldr r10, [r8, 41]
+    and r11, r11, r10
+    ldr r10, [r8, 65]
+    and r11, r11, r10
+    ldr r10, [r8, 13]
+    eor r11, r11, r10
+    ldr r10, [r8, 29]
+    and r11, r11, r10
+    ldr r10, [r8, 50]
+    and r11, r11, r10
+    ldr r10, [r8, 64]
+    and r11, r11, r10
+    ldr r10, [r8, 75]
+    and r11, r11, r10
+    ldr r10, [r8, 6]
+    eor r11, r11, r10
+    ldr r10, [r8, 14]
+    and r11, r11, r10
+    ldr r10, [r8, 26]
+    and r11, r11, r10
+    ldr r10, [r8, 32]
+    and r11, r11, r10
+    ldr r10, [r8, 47]
+    and r11, r11, r10
+    ldr r10, [r8, 61]
+    and r11, r11, r10
+    ldr r10, [r8, 1]
+    eor r11, r11, r10
+    ldr r10, [r8, 19]
+    and r11, r11, r10
+    ldr r10, [r8, 27]
+    and r11, r11, r10
+    ldr r10, [r8, 43]
+    and r11, r11, r10
+    ldr r10, [r8, 57]
+    and r11, r11, r10
+    ldr r10, [r8, 66]
+    and r11, r11, r10
+    ldr r10, [r8, 78]
+    and r11, r11, r10
+    str r11, [r5, r4]
+    //end of T[t]
+
+    //Ttilde
+    ldr r5, =Ttilde         // load extern symbol Ttilde
+    //end of Ttilde[t]
+
     // Finally, we restore the callee-saved register values and branch back.
     pop {r4-r12}
     bx lr

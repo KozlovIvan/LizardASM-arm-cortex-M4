@@ -451,7 +451,7 @@ void test4(){
     free(result);
     sprintf(str,"Correct keystream:   %s\n", test);
     send_USART_str(str);
-    send_USART_str("\n\n");
+    send_USART_str("\n");
     t=0;
 }
 
@@ -470,15 +470,13 @@ int main(void)
     send_USART_str(str);
     sprintf(str, "https://github.com/KozlovIvan/LizardASM-arm-cortex-M4\n");
     send_USART_str(str);
-    send_USART_str("\n\n");
-
-    //Tests
+    send_USART_str("\n");
     test1();
     test2();
     test3();
     test4();
 
-    send_USART_str("Done!");
+    send_USART_str("Done!\n─────────────────────────────────────────────────────────");
 
     while(1);
     return 0;
