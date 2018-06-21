@@ -200,6 +200,11 @@ mixing_asm:
     // Arguments are placed in r0 and r1, the return value should go in r0.
     // To be certain, we just push all of them onto the stack.
     push {r4-r12}
+    bl a_asm
+    ldr r4, =K
+    ldr r4, [r4]
+    ldr r5, =z
+    str r0, [r5, r4] //z[t] = a()
     //TODO
     // Finally, we restore the callee-saved register values and branch back.
     pop {r4-r12}
@@ -298,13 +303,10 @@ a_asm_Lt:
     ldr r4, [r4]
     mov r5, 90
     mul r5, r4, r5 // B initial offset
-    
-    mov r6, 30
-    mul r6, r6, r4  // S initial offset
 
     // L[t]
     ldr r9, =B // can be reused
-    ldr r10, =L
+    //ldr r10, =L
     
 
     add r7, r5, 7
@@ -329,6 +331,53 @@ a_asm_Lt:
     eor r12, r12, r11
     mov r0, r12
 
+    pop {r4-r12}
+    bx lr
+
+
+.global a_asm_Qt
+.type a_asm_Qt, %function
+a_asm_Qt:
+    push {r4-r12}
+    
+    ldr r4, =t
+    ldr r4, [r4]
+    mov r5, 90
+    mul r5, r4, r5 // B initial offset
+
+    ldr r9, =B // can be reused
+    
+    add r7, r5, 4
+    ldr r11, [r9, r7]
+    add r7, r5, 21
+    ldr r12, [r9, r7]
+    mul r12, r12, r11
+
+    add r7, r5, 9
+    ldr r11, [r9, r7]
+    add r7, r5, 52
+    ldr r8, [r9, r7]
+    mul r8, r8, r1
+
+    eor r12, r12, r8
+
+    add r7, r5, 18
+    ldr r11, [r9, r7]
+    add r7, r5, 37
+    ldr r8, [r9, r7]
+    mul r8, r8, r11
+
+    eor r12, r12, r8
+
+    add r7, r5, 4
+    ldr r11, [r9, r7]
+    add r7, r5, 76
+    ldr r8, [r9, r7]
+    mul r8, r8, r11
+
+    eor r12, r12, r8
+
+    mov r0, r12
     pop {r4-r12}
     bx lr
 

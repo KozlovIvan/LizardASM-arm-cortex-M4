@@ -25,6 +25,7 @@ extern uint8_t* keystreamGenerationSpecification_asm(int);
 extern uint8_t a_asm(void);
 extern uint8_t a_return(void);
 extern uint8_t a_asm_Lt(void);
+extern uint8_t a_asm_Qt(void);
 
 void loadkey(uint8_t*);
 void initRegisters(void);
@@ -145,14 +146,22 @@ void mixing(){
 }
 
 uint8_t a(){
-    
-    L[t] = a_asm_Lt();
+    /*
+     L[t] = B[t][7]  ^ B[t][11] ^ \
+             B[t][30] ^ B[t][40] ^ \
+             B[t][45] ^ B[t][54] ^ \
+             B[t][71];
 
+*/
+    L[t] = a_asm_Lt();
+    
     Q[t] = B[t][4]  * B[t][21] ^ \
            B[t][9]  * B[t][52] ^ \
            B[t][18] * B[t][37] ^ \
            B[t][44] * B[t][76];
 
+    
+    //Q[t] = a_asm_Qt();
     T[t] = B[t][5]  ^ B[t][8]  * \
            B[t][82] ^ B[t][34] * \
            B[t][67] * B[t][73] ^ \
