@@ -26,6 +26,8 @@ extern uint8_t a_asm(void);
 extern uint8_t a_return(void);
 extern uint8_t a_asm_Lt(void);
 extern uint8_t a_asm_Qt(void);
+extern uint8_t a_asm_Tt(void);
+extern uint8_t a_asm_Ttildet(void);
 
 void loadkey(uint8_t*);
 void initRegisters(void);
@@ -163,6 +165,7 @@ uint8_t a(){
 */
     
     Q[t] = a_asm_Qt();
+
     T[t] = B[t][5]  ^ B[t][8]  * \
            B[t][82] ^ B[t][34] * \
            B[t][67] * B[t][73] ^ \
@@ -177,12 +180,14 @@ uint8_t a(){
            B[t][19] * B[t][27] * \
            B[t][43] * B[t][57] * \
            B[t][66] * B[t][78];
-
+/*
     Ttilde[t] = S[t][23] ^ S[t][3]  * \
                 S[t][16] ^ S[t][9]  * \
                 S[t][13] * B[t][48] ^ \
                 S[t][1]  * S[t][24] * \
                 B[t][38] * B[t][63];
+*/
+    Ttilde[t] = a_asm_Ttildet();
         uint8_t rt = a_return();
         return rt;
 }

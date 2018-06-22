@@ -382,6 +382,77 @@ a_asm_Qt:
     pop {r4-r12}
     bx lr
 
+.global a_asm_Tt
+.type a_asm_Tt, %function
+a_asm_Tt:
+    push {r4-r12}
+    //TODO
+    pop {r4-r12}
+    bx lr
+
+.global a_asm_Ttildet
+.type a_asm_Ttildet, %function
+a_asm_Ttildet:
+    push {r4-r12}
+    ldr r4, =t
+    ldr r4, [r4]
+    mov r5, 31
+    mul r5, r4, r5 // B initial offset
+
+    ldr r9, =S // can be reused
+
+    add r7, r5, 23
+    ldr r12, [r9, r7]
+    
+    add r7, r5, 3
+    ldr r11, [r9, r7]
+    add r7, r5, 16
+    ldr r8, [r9, r7]
+    and r8, r11, r8 // S[t][3]*S[t][16]
+
+    eor r12, r12, r8 //S[t][23] ^(S[t][3]*S[t][16])
+
+    add r7, r5, 9
+    ldr r11, [r9, r7]
+    add r7, r5, 13
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+
+    ldr r9, =B // can be reused
+    mov r5, 90
+    mul r5, r4, r5 // B initial offset
+    add r7, r5, 48
+    ldr r11, [r9, r7]
+    and r8, r11, r8 // S[t][9]*S[t][13]*B[t][48]
+
+    eor r12, r12, r8 //S[t][23]^(S[t][3]*S[t][16])^(S[t][9]*S[t][13]*B[t][48])
+
+    mov r5, 31
+    mul r5, r4, r5 // B initial offset
+    ldr r9, =S // can be reused
+
+    add r7, r5, 1
+    ldr r11, [r9, r7]
+    add r7, r5, 24
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+    ldr r9, =B // can be reused
+    mov r5, 90
+    mul r5, r4, r5 // B initial offset
+    add r7, r5, 38
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 63
+    ldr r11, [r9, r7]
+    and r8, r11, r8 //last bit of expression
+
+    eor r12, r12, r8
+
+    mov r0, r12 
+
+    pop {r4-r12}
+    bx lr
+
 .global a_asm
 .type a_asm, %function
 a_asm:
@@ -389,22 +460,7 @@ a_asm:
     // Arguments are placed in r0 and r1, the return value should go in r0.
     // To be certain, we just push all of them onto the stack.
     push {r4-r12}
-    
-
-    ldr r4, =t
-    ldr r4, [r4] //??
-    ldr r5, =L
-    ldr r5, [r5, r4]
-    ldr r6, =Q
-    ldr r6, [r6, r4]
-    ldr r7, =T
-    ldr r7, [r7, r4]
-    ldr r8, =Ttilde
-    ldr r8, [r8, r4]
-    eor r5, r5, r6
-    eor r5, r5, r7
-    eor r5, r5, r8
-    mov r0, r5    
+    //TODO
     pop {r4-r12}
     bx lr
 
