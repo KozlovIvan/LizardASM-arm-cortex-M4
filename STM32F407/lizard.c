@@ -57,7 +57,6 @@ uint32_t keystream_size = KEYSTREAM_SIZE;
 
 
 uint8_t keystream[KEYSTREAM_SIZE];
-
 uint8_t a257 = 0;
 int t = 0;
 uint8_t K[120];
@@ -67,7 +66,7 @@ uint8_t L[KEYSTREAM_SIZE+128];
 uint8_t Q[KEYSTREAM_SIZE+128];
 uint8_t T[KEYSTREAM_SIZE+128];
 uint8_t Ttilde[KEYSTREAM_SIZE+129];
-    uint8_t B[KEYSTREAM_SIZE+258][90];
+uint8_t B[KEYSTREAM_SIZE+258][90];
 uint8_t S[KEYSTREAM_SIZE+258][31];
 
 
@@ -115,24 +114,6 @@ void _initialization(uint8_t *key, uint8_t *iv){
 
 
 
-void initRegisters(){
-
-    for(int i = 0; i <=63; ++i){
-       B[0][i] = K[i]^IV[i];
-    }
-
-    for(int i = 64; i<=89; ++i){
-        B[0][i] = K[i];
-    }
-
-    for(int i = 0; i <=28; ++i){
-       S[0][i] = K[i+90];
-    }
-
-   S[0][29] = K[119] ^ (uint8_t )1;
-   S[0][30] = 1;
-}
-
 void mixing(){
 
     z[t] = a_asm();
@@ -140,7 +121,7 @@ void mixing(){
         B[t + 1][i] = B[t][i + 1];
     }
 
-    B[t+1][89] = z[t] ^ NFSR2();
+    B[t+1][89] = z[t] ^ NFSR2_asm();
 
     for(int i = 0; i <= 29; ++i){
         S[t+1][i] = S[t][i+1];
@@ -148,51 +129,7 @@ void mixing(){
     S[t+1][30] = z[t] ^ NFSR1();
 }
 
-uint8_t a(){
-    /*
-     L[t] = B[t][7]  ^ B[t][11] ^ \
-             B[t][30] ^ B[t][40] ^ \
-             B[t][45] ^ B[t][54] ^ \
-             B[t][71];
 
-*/
-    L[t] = a_asm_Lt();
-    
-    /*Q[t] = B[t][4]  * B[t][21] ^ \
-          B[t][9]  * B[t][52] ^ \
-          B[t][18] * B[t][37] ^ \
-           B[t][44] * B[t][76];
-*/
-    
-    Q[t] = a_asm_Qt();
-    /*
-    T[t] = B[t][5]  ^ B[t][8]  * \
-           B[t][82] ^ B[t][34] * \
-           B[t][67] * B[t][73] ^ \
-           B[t][2]  * B[t][28] * \
-           B[t][41] * B[t][65] ^ \
-           B[t][13] * B[t][29] * \
-           B[t][50] * B[t][64] * \
-           B[t][75] ^ B[t][6]  * \
-           B[t][14] * B[t][26] * \
-           B[t][32] * B[t][47] * \
-           B[t][61] ^ B[t][1]  * \
-           B[t][19] * B[t][27] * \
-           B[t][43] * B[t][57] * \
-           B[t][66] * B[t][78];
-           */
-    T[t] = a_asm_Tt();
-/*
-    Ttilde[t] = S[t][23] ^ S[t][3]  * \
-                S[t][16] ^ S[t][9]  * \
-                S[t][13] * B[t][48] ^ \
-                S[t][1]  * S[t][24] * \
-                B[t][38] * B[t][63];
-*/
-    Ttilde[t] = a_asm_Ttildet();
-        uint8_t rt = a_return();
-        return rt;
-}
 
 uint8_t NFSR2(){
 
@@ -280,7 +217,7 @@ void diffusion(){
         B[t+1][i] = B[t][i+1];
     }
 
-    B[t+1][89] = NFSR2();
+    B[t+1][89] = NFSR2_asm();
 
     for(int i = 0; i <= 29; ++i){
         S[t+1][i] = S[t][i+1];
@@ -297,7 +234,7 @@ void keysteamGeneration(int length){
     }
 
     for(int i = 0; i < length; ++i){
-        keystream[i] = a();
+        keystream[i] = a_asm();
         diffusion();
         ++t;
     }
@@ -310,14 +247,14 @@ uint8_t* keystreamGenerationSpecification(uint8_t length){
     }
     uint8_t length_t = length - 1;
     if (!a257){
-        z[t] = a();
+        z[t] = a_asm();
         a257 = 1;
         --length_t;
     }
     for(int i = 0; i <= length_t; ++i){
         diffusion();
         ++t;
-        z[t] = a();
+        z[t] = a_asm();
     }
     uint8_t* ret_slice = calloc(length, sizeof(uint8_t));
 

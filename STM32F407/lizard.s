@@ -16,10 +16,10 @@ lizard_asm:
     // Remember the ABI: we must not destroy the values in r4 to r12.
     // Arguments are placed in r0 and r1, the return value should go in r0.
     // To be certain, we just push all of them onto the stack.
-    push {r4-r12}
+    push {r4-r12, r14}
     //TODO
     // Finally, we restore the callee-saved register values and branch back.
-    pop {r4-r12}
+    pop {r4-r12, r14}
     bx lr
 
 .global _construct_asm
@@ -28,7 +28,7 @@ _construct_asm:
     // Remember the ABI: we must not destroy the values in r4 to r12.
     // Arguments are placed in r0 and r1, the return value should go in r0.
     // To be certain, we just push all of them onto the stack.
-    push {r4-r12}
+    push {r4-r12, r14}
     mov r4, 0       // counter
     mov r5, 0       // zero val
     ldr r6, =z      // load extern symbol z
@@ -61,7 +61,7 @@ construct_LQTTtilde:
     bgt keystreamGeneration_asm
 
     // Finally, we restore the callee-saved register values and branch back.
-    pop {r4-r12}
+    pop {r4-r12, r14}
     bx lr
 
 .global _initialization_asm
@@ -70,7 +70,7 @@ _initialization_asm:
     // Remember the ABI: we must not destroy the values in r4 to r12.
     // Arguments are placed in r0 and r1, the return value should go in r0.
     // To be certain, we just push all of them onto the stack.
-    push {r4-r12}
+    push {r4-r12, r14}
     bl loadkey_asm
     bl loadIV_asm
     bl initRegisters_asm
@@ -98,7 +98,7 @@ phase_4:
     ble phase_4
 
     // Finally, we restore the callee-saved register values and branch back.
-    pop {r4-r12}
+    pop {r4-r12, r14}
     bx lr
 
 .global loadkey_asm
@@ -107,7 +107,7 @@ loadkey_asm:
     // Remember the ABI: we must not destroy the values in r4 to r12.
     // Arguments are placed in r0 and r1, the return value should go in r0.
     // To be certain, we just push all of them onto the stack.
-    push {r4-r12}
+    push {r4-r12, r14}
 
     mov r4, 0       // counter
     ldr r5, =K      // load extern symbol K (key array)
@@ -119,7 +119,7 @@ loadkey_loop:
     ble loadkey_loop    // if less or equal jump to the begining of the loop
     
     // Finally, we restore the callee-saved register values and branch back.
-    pop {r4-r12}
+    pop {r4-r12, r14}
     bx lr
 
 .global loadIV_asm
@@ -128,7 +128,7 @@ loadIV_asm:
     // Remember the ABI: we must not destroy the values in r4 to r12.
     // Arguments are placed in r0 and r1, the return value should go in r0.
     // To be certain, we just push all of them onto the stack.
-    push {r4-r12}
+    push {r4-r12, r14}
 
     mov r4, 0      // initialize loop counter 
     ldr r5, =IV    // load address of first element of IV array
@@ -140,7 +140,7 @@ loadiv_loop:
     ble loadiv_loop     // if less or equal jump to the begining of the loop
 
     // Finally, we restore the callee-saved register values and branch back.
-    pop {r4-r12}
+    pop {r4-r12, r14}
     bx lr
 
 .global initRegisters_asm
@@ -149,7 +149,7 @@ initRegisters_asm:
     // Remember the ABI: we must not destroy the values in r4 to r12.
     // Arguments are placed in r0 and r1, the return value should go in r0.
     // To be certain, we just push all of them onto the stack.
-    push {r4-r12}
+    push {r4-r12, r14}
     mov r4, 0       // counter
     ldr r5, =B      // load extern symbol B
     ldr r6, =K      // load extern symbol K
@@ -190,7 +190,7 @@ init_register_S:
     str r9, [r8, 30]
 
     // Finally, we restore the callee-saved register values and branch back.
-    pop {r4-r12}
+    pop {r4-r12, r14}
     bx lr
 
 .global mixing_asm
@@ -199,7 +199,7 @@ mixing_asm:
     // Remember the ABI: we must not destroy the values in r4 to r12.
     // Arguments are placed in r0 and r1, the return value should go in r0.
     // To be certain, we just push all of them onto the stack.
-    push {r4-r12}
+    push {r4-r12, r14}
     bl a_asm
     ldr r4, =K
     ldr r4, [r4]
@@ -207,7 +207,7 @@ mixing_asm:
     str r0, [r5, r4] //z[t] = a()
     //TODO
     // Finally, we restore the callee-saved register values and branch back.
-    pop {r4-r12}
+    pop {r4-r12, r14}
     bx lr
 
 .global keyadd_asm
@@ -216,10 +216,10 @@ keyadd_asm:
     //Remember the ABI: we must not destroy the values in r4 to r12.
     // Arguments are placed in r0 and r1, the return value should go in r0.
     // To be certain, we just push all of them onto the stack.
-    push {r4-r12}
+    push {r4-r12, r14}
     //TODO
     // Finally, we restore the callee-saved register values and branch back.
-    pop {r4-r12}
+    pop {r4-r12, r14}
     bx lr
 
 .global diffusion_asm
@@ -228,10 +228,10 @@ diffusion_asm:
     // Remember the ABI: we must not destroy the values in r4 to r12.
     // Arguments are placed in r0 and r1, the return value should go in r0.
     // To be certain, we just push all of them onto the stack.
-    push {r4-r12}
+    push {r4-r12, r14}
     //TODO
     // Finally, we restore the callee-saved register values and branch back.
-    pop {r4-r12}
+    pop {r4-r12, r14}
     bx lr
 
 .global NFSR1_asm
@@ -240,10 +240,10 @@ NFSR1_asm:
     // Remember the ABI: we must not destroy the values in r4 to r12.
     //Arguments are placed in r0 and r1, the return value should go in r0.
     // To be certain, we just push all of them onto the stack.
-    push {r4-r12}
+    push {r4-r12, r14}
     //TODO
     // Finally, we restore the callee-saved register values and branch back.
-    pop {r4-r12}
+    pop {r4-r12, r14}
     bx lr
 
 .global NFSR2_asm
@@ -252,10 +252,140 @@ NFSR2_asm:
     // Remember the ABI: we must not destroy the values in r4 to r12.
     // Arguments are placed in r0 and r1, the return value should go in r0.
     // To be certain, we just push all of them onto the stack.
-    push {r4-r12}
-    //TODO
+    push {r4-r12, r14}
+    
+    ldr r4, =t
+    ldr r4, [r4]
+    mov r5, 31
+    mul r5, r4, r5 // B initial offset
+    ldr r9, =S // can be reused
+    
+    ldr r12, [r9, r5]
+    
+    mov r5, 90
+    mul r5, r4, r5 // B initial offset
+    ldr r9, =B // can be reused
+
+    ldr r11, [r9, r5]
+
+    eor r12, r12, r11
+
+    add r7, r5, 24
+    ldr r11, [r9, r7]
+
+    eor r12, r12, r11
+
+    add r7, r5, 49
+    ldr r11, [r9, r7]
+
+    eor r12, r12, r11
+
+    add r7, r5, 79
+    ldr r11, [r9, r7]
+
+    eor r12, r12, r11
+
+    add r7, r5, 84
+    ldr r11, [r9, r7]
+
+    eor r12, r12, r11
+
+    add r7, r5, 3
+    ldr r11, [r9, r7]
+    add r7, r5, 59
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+
+    eor r12, r12, r8
+
+    add r7, r5, 10
+    ldr r11, [r9, r7]
+    add r7, r5, 12
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+
+    eor r12, r12, r8
+
+    add r7, r5, 15
+    ldr r11, [r9, r7]
+    add r7, r5, 16
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+
+    eor r12, r12, r8
+
+    add r7, r5, 25
+    ldr r11, [r9, r7]
+    add r7, r5, 53
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+
+    eor r12, r12, r8
+
+    add r7, r5, 35
+    ldr r11, [r9, r7]
+    add r7, r5, 42
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+
+    eor r12, r12, r8
+
+    add r7, r5, 55
+    ldr r11, [r9, r7]
+    add r7, r5, 58
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+
+    eor r12, r12, r8
+
+    add r7, r5, 60
+    ldr r11, [r9, r7]
+    add r7, r5, 74
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+
+    eor r12, r12, r8
+
+    add r7, r5, 20
+    ldr r11, [r9, r7]
+    add r7, r5, 22
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 23
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+
+    eor r12, r12, r8
+
+    add r7, r5, 62
+    ldr r11, [r9, r7]
+    add r7, r5, 68
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 72
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+
+    eor r12, r12, r8
+
+    add r7, r5, 77
+    ldr r11, [r9, r7]
+    add r7, r5, 80
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 81
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 83
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+
+
+    eor r12, r12, r8
+    mov r0, r12
+
     // Finally, we restore the callee-saved register values and branch back.
-    pop {r4-r12}
+    pop {r4-r12, r14}
     bx lr
 
 .global construct_asm
@@ -264,10 +394,10 @@ construct_asm:
     // Remember the ABI: we must not destroy the values in r4 to r12.
     // Arguments are placed in r0 and r1, the return value should go in r0.
     // To be certain, we just push all of them onto the stack.
-    push {r4-r12}
+    push {r4-r12, r14}
     //TODO
     // Finally, we restore the callee-saved register values and branch back.
-    pop {r4-r12}
+    pop {r4-r12, r14}
     bx lr
 
 .global keystreamGeneration_asm
@@ -276,10 +406,10 @@ keystreamGeneration_asm:
     // Remember the ABI: we must not destroy the values in r4 to r12.
     // Arguments are placed in r0 and r1, the return value should go in r0.
     // To be certain, we just push all of them onto the stack.
-    push {r4-r12}
+    push {r4-r12, r14}
     //TODO
     // Finally, we restore the callee-saved register values and branch back.
-    pop {r4-r12}
+    pop {r4-r12, r14}
     bx lr
 
 .global keystreamGenerationSpecification_asm
