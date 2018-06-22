@@ -241,7 +241,14 @@ NFSR1_asm:
     //Arguments are placed in r0 and r1, the return value should go in r0.
     // To be certain, we just push all of them onto the stack.
     push {r4-r12, r14}
-    //TODO
+    ldr r4, =t
+    ldr r4, [r4]
+    mov r5, 31
+    mul r5, r4, r5 // B initial offset
+    ldr r9, =S // can be reused
+
+    
+
     // Finally, we restore the callee-saved register values and branch back.
     pop {r4-r12, r14}
     bx lr
