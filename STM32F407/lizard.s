@@ -297,7 +297,7 @@ keystreamGenerationSpecification_asm:
 .global a_asm_Lt
 .type a_asm_Lt, %function
 a_asm_Lt:
-    push {r4-r12}
+    push {r4-r12, r14}
     
     ldr r4, =t
     ldr r4, [r4]
@@ -331,14 +331,14 @@ a_asm_Lt:
     eor r12, r12, r11
     mov r0, r12
 
-    pop {r4-r12}
+    pop {r4-r12, r14}
     bx lr
 
 
 .global a_asm_Qt
 .type a_asm_Qt, %function
 a_asm_Qt:
-    push {r4-r12}
+    push {r4-r12, r14}
     
     ldr r4, =t
     ldr r4, [r4]
@@ -379,21 +379,126 @@ a_asm_Qt:
     
     
     mov r0, r12
-    pop {r4-r12}
+    pop {r4-r12, r14}
     bx lr
 
 .global a_asm_Tt
 .type a_asm_Tt, %function
 a_asm_Tt:
-    push {r4-r12}
-    //TODO
-    pop {r4-r12}
+    push {r4-r12, r14}
+   
+    ldr r4, =t
+    ldr r4, [r4]
+    mov r5, 90
+    mul r5, r4, r5 // B initial offset
+    
+    ldr r9, =B // can be reused
+
+    add r7, r5, 5
+    ldr r12, [r9, r7]
+    
+    add r7, r5, 8
+    ldr r11, [r9, r7]
+    add r7, r5, 82
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+
+    eor r12, r12, r8
+
+    add r7, r5, 34
+    ldr r11, [r9, r7]
+    add r7, r5, 67
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 73
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+
+    eor r12, r12, r8
+
+    add r7, r5, 2
+    ldr r11, [r9, r7]
+    add r7, r5, 28
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 41
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 65
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+
+    eor r12, r12, r8
+
+    add r7, r5, 13
+    ldr r11, [r9, r7]
+    add r7 ,r5, 29
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 50
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 64
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 75
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+
+    eor r12, r12, r8
+
+    add r7, r5, 6
+    ldr r11, [r9, r7]
+    add r7 ,r5, 14
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 26
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 32
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 47
+    ldr r11, [r9, r7]
+    and r8, r11, r8 
+    add r7, r5, 61
+    ldr r11, [r9, r7]
+    and r8, r11, r8 
+
+    eor r12, r12, r8
+
+    add r7, r5, 1
+    ldr r11, [r9, r7]
+    add r7 ,r5, 19
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 27
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 43
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 57
+    ldr r11, [r9, r7]
+    and r8, r11, r8 
+    add r7, r5, 66
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 78
+    ldr r11, [r9, r7]
+    and r8, r11, r8 
+
+    eor r12, r12, r8
+
+    mov r0, r12 
+
+    pop {r4-r12, r14}
     bx lr
 
 .global a_asm_Ttildet
 .type a_asm_Ttildet, %function
 a_asm_Ttildet:
-    push {r4-r12}
+    push {r4-r12, r14}
     ldr r4, =t
     ldr r4, [r4]
     mov r5, 31
@@ -450,7 +555,7 @@ a_asm_Ttildet:
 
     mov r0, r12 
 
-    pop {r4-r12}
+    pop {r4-r12, r14}
     bx lr
 
 .global a_asm
@@ -459,16 +564,37 @@ a_asm:
     //Remember the ABI: we must not destroy the values in r4 to r12.
     // Arguments are placed in r0 and r1, the return value should go in r0.
     // To be certain, we just push all of them onto the stack.
-    push {r4-r12}
-    //TODO
-    pop {r4-r12}
+    push {r4-r12, r14}
+    ldr r4, =t
+    ldr r4, [r4]
+    ldr r5, =L
+    ldr r6, =Q
+    ldr r7, =T
+    ldr r8, =Ttilde
+
+    bl a_asm_Lt
+    str r0, [r5, r4]
+
+    bl a_asm_Qt
+    str r0, [r6, r4]
+
+    bl a_asm_Tt
+    str r0, [r7, r4]
+
+    bl a_asm_Ttildet
+    str r0, [r8, r4]
+
+    bl a_return
+
+
+    pop {r4-r12, r14}
     bx lr
 
 
 .global a_return
 .type a_return, %function
 a_return:
-    push {r4-r12}
+    push {r4-r12, r14}
     //craft return value to r0
     ldr r4, =t
     ldr r4, [r4] //??
@@ -487,5 +613,5 @@ a_return:
 
     
     // Finally, we restore the callee-saved register values and branch back.
-    pop {r4-r12}
+    pop {r4-r12, r14}
     bx lr

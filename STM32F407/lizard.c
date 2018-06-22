@@ -135,7 +135,7 @@ void initRegisters(){
 
 void mixing(){
 
-    z[t] = a();
+    z[t] = a_asm();
     for(int i = 0; i<=88; ++i) {
         B[t + 1][i] = B[t][i + 1];
     }
@@ -165,7 +165,7 @@ uint8_t a(){
 */
     
     Q[t] = a_asm_Qt();
-
+    /*
     T[t] = B[t][5]  ^ B[t][8]  * \
            B[t][82] ^ B[t][34] * \
            B[t][67] * B[t][73] ^ \
@@ -180,6 +180,8 @@ uint8_t a(){
            B[t][19] * B[t][27] * \
            B[t][43] * B[t][57] * \
            B[t][66] * B[t][78];
+           */
+    T[t] = a_asm_Tt();
 /*
     Ttilde[t] = S[t][23] ^ S[t][3]  * \
                 S[t][16] ^ S[t][9]  * \
