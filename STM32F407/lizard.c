@@ -55,8 +55,7 @@ uint32_t keystream_size = KEYSTREAM_SIZE;
 
 
 uint8_t keystream[KEYSTREAM_SIZE];
-uint8_t B[KEYSTREAM_SIZE+258][90];
-uint8_t S[KEYSTREAM_SIZE+258][31];
+
 uint8_t a257 = 0;
 int t = 0;
 uint8_t K[120];
@@ -66,6 +65,8 @@ uint8_t L[KEYSTREAM_SIZE+128];
 uint8_t Q[KEYSTREAM_SIZE+128];
 uint8_t T[KEYSTREAM_SIZE+128];
 uint8_t Ttilde[KEYSTREAM_SIZE+129];
+    uint8_t B[KEYSTREAM_SIZE+258][90];
+uint8_t S[KEYSTREAM_SIZE+258][31];
 
 
 
@@ -155,13 +156,13 @@ uint8_t a(){
 */
     L[t] = a_asm_Lt();
     
-    Q[t] = B[t][4]  * B[t][21] ^ \
-           B[t][9]  * B[t][52] ^ \
-           B[t][18] * B[t][37] ^ \
+    /*Q[t] = B[t][4]  * B[t][21] ^ \
+          B[t][9]  * B[t][52] ^ \
+          B[t][18] * B[t][37] ^ \
            B[t][44] * B[t][76];
-
+*/
     
-    //Q[t] = a_asm_Qt();
+    Q[t] = a_asm_Qt();
     T[t] = B[t][5]  ^ B[t][8]  * \
            B[t][82] ^ B[t][34] * \
            B[t][67] * B[t][73] ^ \
@@ -346,7 +347,7 @@ uint8_t hex2int(char ch) {
 
 void hex2binArray(char* hex, uint8_t * bin) {
     for (uint8_t i = 0; i < strlen(hex); ++i){
-        uint16_t val = hex2int(hex[i]);
+        uint8_t val = hex2int(hex[i]);
 
         bin[i*4 + 3] = (uint8_t) (val & 1);
         bin[i*4 + 2] = (uint8_t) ((val >> 1) & 1);
