@@ -247,7 +247,305 @@ NFSR1_asm:
     mul r5, r4, r5 // B initial offset
     ldr r9, =S // can be reused
 
-    
+    ldr r12, [r9, r5]
+    add r7, r5, 2
+    ldr r11, [r9, r7]
+    eor r12, r12, r11
+
+    add r7, r5, 5
+    ldr r11, [r9, r7]
+    eor r12, r12, r11
+
+    add r7, r5, 6
+    ldr r11, [r9, r7]
+    eor r12, r12, r11
+
+    add r7, r5, 15
+    ldr r11, [r9, r7]
+    eor r12, r12, r11
+
+    add r7, r5, 17
+    ldr r11, [r9, r7]
+    eor r12, r12, r11
+
+    add r7, r5, 18
+    ldr r11, [r9, r7]
+    eor r12, r12, r11
+
+    add r7, r5, 20
+    ldr r11, [r9, r7]
+    eor r12, r12, r11
+
+    add r7, r5, 25
+    ldr r11, [r9, r7]
+    eor r12, r12, r11
+
+    add r7, r5, 8
+    ldr r11, [r9, r7]
+    add r7, r5, 18
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+
+    eor r12, r12, r8
+
+    add r7, r5, 8
+    ldr r11, [r9, r7]
+    add r7, r5, 20
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+
+    eor r12, r12, r8
+
+    add r7, r5, 12
+    ldr r11, [r9, r7]
+    add r7, r5, 21
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+
+    eor r12, r12, r8
+
+    add r7, r5, 14
+    ldr r11, [r9, r7]
+    add r7, r5, 19
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+
+    eor r12, r12, r8
+
+    add r7, r5, 17
+    ldr r11, [r9, r7]
+    add r7, r5, 21
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+
+    eor r12, r12, r8
+
+    add r7, r5, 20
+    ldr r11, [r9, r7]
+    add r7, r5, 22
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+
+    eor r12, r12, r8
+
+    add r7, r5, 4
+    ldr r11, [r9, r7]
+    add r7, r5, 12
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 22
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+
+    eor r12, r12, r8
+
+    add r7, r5, 4
+    ldr r11, [r9, r7]
+    add r7, r5, 19
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 22
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+
+    eor r12, r12, r8
+
+    add r7, r5, 7
+    ldr r11, [r9, r7]
+    add r7, r5, 20
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 21
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+
+    eor r12, r12, r8
+
+    add r7, r5, 8
+    ldr r11, [r9, r7]
+    add r7, r5, 18
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 22
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+
+    eor r12, r12, r8
+
+    add r7, r5, 8
+    ldr r11, [r9, r7]
+    add r7, r5, 20
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 22
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+
+    eor r12, r12, r8
+
+    add r7, r5, 12
+    ldr r11, [r9, r7]
+    add r7, r5, 19
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 22
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+
+    eor r12, r12, r8
+
+    add r7, r5, 20
+    ldr r11, [r9, r7]
+    add r7, r5, 21
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 22
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+
+    eor r12, r12, r8
+
+    add r7, r5, 4
+    ldr r11, [r9, r7]
+    add r7, r5, 7
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 12
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 21
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+
+    eor r12, r12, r8
+
+    add r7, r5, 4
+    ldr r11, [r9, r7]
+    add r7, r5, 7
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 19
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 21
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+
+    eor r12, r12, r8
+
+    add r7, r5, 4
+    ldr r11, [r9, r7]
+    add r7, r5, 12
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 21
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 22
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+
+    eor r12, r12, r8
+
+    add r7, r5, 4
+    ldr r11, [r9, r7]
+    add r7, r5, 19
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 21
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 22
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+
+    eor r12, r12, r8
+
+    add r7, r5, 7
+    ldr r11, [r9, r7]
+    add r7, r5, 8
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 18
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 21
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+
+    eor r12, r12, r8
+
+    add r7, r5, 7
+    ldr r11, [r9, r7]
+    add r7, r5, 8
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 20
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 21
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+
+    eor r12, r12, r8
+
+    add r7, r5, 7
+    ldr r11, [r9, r7]
+    add r7, r5, 12
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 19
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 21
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+
+    eor r12, r12, r8
+
+    add r7, r5, 8
+    ldr r11, [r9, r7]
+    add r7, r5, 18
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 21
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 22
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+
+    eor r12, r12, r8
+
+    add r7, r5, 8
+    ldr r11, [r9, r7]
+    add r7, r5, 20
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 21
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 22
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+
+    eor r12, r12, r8
+
+    add r7, r5, 12
+    ldr r11, [r9, r7]
+    add r7, r5, 19
+    ldr r8, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 21
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+    add r7, r5, 22
+    ldr r11, [r9, r7]
+    and r8, r11, r8
+
+    eor r12, r12, r8
+
+    mov r0, r12
 
     // Finally, we restore the callee-saved register values and branch back.
     pop {r4-r12, r14}
