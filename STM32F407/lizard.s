@@ -200,64 +200,7 @@ mixing_asm:
     // Arguments are placed in r0 and r1, the return value should go in r0.
     // To be certain, we just push all of them onto the stack.
     push {r4-r12, r14}
-    
-    ldr r4, =t
-    ldr r4, [r4]
-    ldr r5, =z
-    bl a_asm
-    str r0, [r5, r4]
-    mov r12, r0
-
-
-    add r5, r4, 1
-    mov r9, 90
-    mul r6, r4, r9 // t
-    mul r7, r5, r9 // t+1
-
-
-    ldr r9, =B
-
-    mov r10 , 0 // counter
-
-mixing_B:
-    add r8, r10, 1
-    add r8, r6, r8
-    ldr r11, [r9, r8]
-    add r8, r7, r10
-    str r11, [r9, r8]
-
-    add r10, r10, 1
-    cmp r10, 88
-    ble mixing_B
-
-    add r8, r7, 89
-    bl NFSR2_asm
-    eor r12, r12, r0
-    str r12, [r9, r8]
-
-    mov r9, 31
-    mul r6, r4, r9 // t
-    mul r7, r5, r9 // t+1
-
-    ldr r9, =S
-
-    mov r10 , 0 // counter
-mixing_S:
-    add r8, r10, 1
-    add r8, r6, r8
-    ldr r11, [r9, r8]
-    add r8, r7, r10
-    str r11, [r9, r8]
-
-    add r10, r10, 1
-    cmp r10, 29
-    ble diffusion_S
-
-    add r8, r7, 30
-    bl NFSR1
-    eor r12, r12, r0
-    str r12, [r9, r8]
-
+    //TODO
     // Finally, we restore the callee-saved register values and branch back.
     pop {r4-r12, pc}
     bx lr
@@ -269,7 +212,8 @@ keyadd_asm:
     // Arguments are placed in r0 and r1, the return value should go in r0.
     // To be certain, we just push all of them onto the stack.
     push {r4-r12, r14}
-    //TODO
+    
+
     // Finally, we restore the callee-saved register values and branch back.
     pop {r4-r12, pc}
     bx lr
@@ -349,38 +293,38 @@ NFSR1_asm:
     mul r5, r4, r5 // B initial offset
     ldr r9, =S // can be reused
 
-    ldr r12, [r9, r5]
+    ldr r3, [r9, r5]
     add r7, r5, 2
     ldr r11, [r9, r7]
-    eor r12, r12, r11
+    eor r3, r3, r11
 
     add r7, r5, 5
     ldr r11, [r9, r7]
-    eor r12, r12, r11
+    eor r3, r3, r11
 
     add r7, r5, 6
     ldr r11, [r9, r7]
-    eor r12, r12, r11
+    eor r3, r3, r11
 
     add r7, r5, 15
     ldr r11, [r9, r7]
-    eor r12, r12, r11
+    eor r3, r3, r11
 
     add r7, r5, 17
     ldr r11, [r9, r7]
-    eor r12, r12, r11
+    eor r3, r3, r11
 
     add r7, r5, 18
     ldr r11, [r9, r7]
-    eor r12, r12, r11
+    eor r3, r3, r11
 
     add r7, r5, 20
     ldr r11, [r9, r7]
-    eor r12, r12, r11
+    eor r3, r3, r11
 
     add r7, r5, 25
     ldr r11, [r9, r7]
-    eor r12, r12, r11
+    eor r3, r3, r11
 
     add r7, r5, 8
     ldr r11, [r9, r7]
@@ -388,7 +332,7 @@ NFSR1_asm:
     ldr r8, [r9, r7]
     and r8, r11, r8
 
-    eor r12, r12, r8
+    eor r3, r3, r8
 
     add r7, r5, 8
     ldr r11, [r9, r7]
@@ -396,7 +340,7 @@ NFSR1_asm:
     ldr r8, [r9, r7]
     and r8, r11, r8
 
-    eor r12, r12, r8
+    eor r3, r3, r8
 
     add r7, r5, 12
     ldr r11, [r9, r7]
@@ -404,7 +348,7 @@ NFSR1_asm:
     ldr r8, [r9, r7]
     and r8, r11, r8
 
-    eor r12, r12, r8
+    eor r3, r3, r8
 
     add r7, r5, 14
     ldr r11, [r9, r7]
@@ -412,7 +356,7 @@ NFSR1_asm:
     ldr r8, [r9, r7]
     and r8, r11, r8
 
-    eor r12, r12, r8
+    eor r3, r3, r8
 
     add r7, r5, 17
     ldr r11, [r9, r7]
@@ -420,7 +364,7 @@ NFSR1_asm:
     ldr r8, [r9, r7]
     and r8, r11, r8
 
-    eor r12, r12, r8
+    eor r3, r3, r8
 
     add r7, r5, 20
     ldr r11, [r9, r7]
@@ -428,7 +372,7 @@ NFSR1_asm:
     ldr r8, [r9, r7]
     and r8, r11, r8
 
-    eor r12, r12, r8
+    eor r3, r3, r8
 
     add r7, r5, 4
     ldr r11, [r9, r7]
@@ -439,7 +383,7 @@ NFSR1_asm:
     ldr r11, [r9, r7]
     and r8, r11, r8
 
-    eor r12, r12, r8
+    eor r3, r3, r8
 
     add r7, r5, 4
     ldr r11, [r9, r7]
@@ -450,7 +394,7 @@ NFSR1_asm:
     ldr r11, [r9, r7]
     and r8, r11, r8
 
-    eor r12, r12, r8
+    eor r3, r3, r8
 
     add r7, r5, 7
     ldr r11, [r9, r7]
@@ -461,7 +405,7 @@ NFSR1_asm:
     ldr r11, [r9, r7]
     and r8, r11, r8
 
-    eor r12, r12, r8
+    eor r3, r3, r8
 
     add r7, r5, 8
     ldr r11, [r9, r7]
@@ -472,7 +416,7 @@ NFSR1_asm:
     ldr r11, [r9, r7]
     and r8, r11, r8
 
-    eor r12, r12, r8
+    eor r3, r3, r8
 
     add r7, r5, 8
     ldr r11, [r9, r7]
@@ -483,7 +427,7 @@ NFSR1_asm:
     ldr r11, [r9, r7]
     and r8, r11, r8
 
-    eor r12, r12, r8
+    eor r3, r3, r8
 
     add r7, r5, 12
     ldr r11, [r9, r7]
@@ -494,7 +438,7 @@ NFSR1_asm:
     ldr r11, [r9, r7]
     and r8, r11, r8
 
-    eor r12, r12, r8
+    eor r3, r3, r8
 
     add r7, r5, 20
     ldr r11, [r9, r7]
@@ -505,7 +449,7 @@ NFSR1_asm:
     ldr r11, [r9, r7]
     and r8, r11, r8
 
-    eor r12, r12, r8
+    eor r3, r3, r8
 
     add r7, r5, 4
     ldr r11, [r9, r7]
@@ -519,7 +463,7 @@ NFSR1_asm:
     ldr r11, [r9, r7]
     and r8, r11, r8
 
-    eor r12, r12, r8
+    eor r3, r3, r8
 
     add r7, r5, 4
     ldr r11, [r9, r7]
@@ -533,7 +477,7 @@ NFSR1_asm:
     ldr r11, [r9, r7]
     and r8, r11, r8
 
-    eor r12, r12, r8
+    eor r3, r3, r8
 
     add r7, r5, 4
     ldr r11, [r9, r7]
@@ -547,7 +491,7 @@ NFSR1_asm:
     ldr r11, [r9, r7]
     and r8, r11, r8
 
-    eor r12, r12, r8
+    eor r3, r3, r8
 
     add r7, r5, 4
     ldr r11, [r9, r7]
@@ -561,7 +505,7 @@ NFSR1_asm:
     ldr r11, [r9, r7]
     and r8, r11, r8
 
-    eor r12, r12, r8
+    eor r3, r3, r8
 
     add r7, r5, 7
     ldr r11, [r9, r7]
@@ -575,7 +519,7 @@ NFSR1_asm:
     ldr r11, [r9, r7]
     and r8, r11, r8
 
-    eor r12, r12, r8
+    eor r3, r3, r8
 
     add r7, r5, 7
     ldr r11, [r9, r7]
@@ -589,7 +533,7 @@ NFSR1_asm:
     ldr r11, [r9, r7]
     and r8, r11, r8
 
-    eor r12, r12, r8
+    eor r3, r3, r8
 
     add r7, r5, 7
     ldr r11, [r9, r7]
@@ -603,7 +547,7 @@ NFSR1_asm:
     ldr r11, [r9, r7]
     and r8, r11, r8
 
-    eor r12, r12, r8
+    eor r3, r3, r8
 
     add r7, r5, 8
     ldr r11, [r9, r7]
@@ -617,7 +561,7 @@ NFSR1_asm:
     ldr r11, [r9, r7]
     and r8, r11, r8
 
-    eor r12, r12, r8
+    eor r3, r3, r8
 
     add r7, r5, 8
     ldr r11, [r9, r7]
@@ -631,7 +575,7 @@ NFSR1_asm:
     ldr r11, [r9, r7]
     and r8, r11, r8
 
-    eor r12, r12, r8
+    eor r3, r3, r8
 
     add r7, r5, 12
     ldr r11, [r9, r7]
@@ -645,10 +589,10 @@ NFSR1_asm:
     ldr r11, [r9, r7]
     and r8, r11, r8
 
-    eor r12, r12, r8
+    eor r3, r3, r8
 
-    mov r0, r12
-
+    mov r0, r3
+    mov r3, 0
     // Finally, we restore the callee-saved register values and branch back.
     pop {r4-r12, pc}
     bx lr
@@ -814,7 +758,34 @@ keystreamGeneration_asm:
     // Arguments are placed in r0 and r1, the return value should go in r0.
     // To be certain, we just push all of them onto the stack.
     push {r4-r12, r14}
-    //TODO
+    ldr r4, =keystream_size
+    ldr r4, [r4]
+    ldr r5, =keystream
+    mov r6, 0 // counter
+    mov r7, 0 //value
+    ldr r8, =t
+    ldr r9, [r8]
+keystream_init:
+    str r7, [r5, r6]
+    add r6, r6, 1
+    cmp r6, r4
+    blt keystream_init
+
+    mov r6, 0
+    sub r4, r4, 1
+
+keystream_gen:
+    bl a_asm
+    str r0, [r5, r6]
+    bl diffusion_asm
+    add r9, r9, 1
+    str r9, [r8]
+    add r6, r6, 1
+    cmp r6, r4
+    blt keystream_gen  
+
+    bl a_asm
+    str r0, [r5, r4]
     // Finally, we restore the callee-saved register values and branch back.
     pop {r4-r12, pc}
     bx lr
