@@ -19,7 +19,7 @@ lizard_asm:
     push {r4-r12, r14}
     //TODO
     // Finally, we restore the callee-saved register values and branch back.
-    pop {r4-r12, r14}
+    pop {r4-r12, pc}
     bx lr
 
 .global _construct_asm
@@ -61,7 +61,7 @@ construct_LQTTtilde:
     bgt keystreamGeneration_asm
 
     // Finally, we restore the callee-saved register values and branch back.
-    pop {r4-r12, r14}
+    pop {r4-r12, pc}
     bx lr
 
 .global _initialization_asm
@@ -98,7 +98,7 @@ phase_4:
     ble phase_4
 
     // Finally, we restore the callee-saved register values and branch back.
-    pop {r4-r12, r14}
+    pop {r4-r12, pc}
     bx lr
 
 .global loadkey_asm
@@ -119,7 +119,7 @@ loadkey_loop:
     ble loadkey_loop    // if less or equal jump to the begining of the loop
     
     // Finally, we restore the callee-saved register values and branch back.
-    pop {r4-r12, r14}
+    pop {r4-r12, pc}
     bx lr
 
 .global loadIV_asm
@@ -140,7 +140,7 @@ loadiv_loop:
     ble loadiv_loop     // if less or equal jump to the begining of the loop
 
     // Finally, we restore the callee-saved register values and branch back.
-    pop {r4-r12, r14}
+    pop {r4-r12, pc}
     bx lr
 
 .global initRegisters_asm
@@ -190,7 +190,7 @@ init_register_S:
     str r9, [r8, 30]
 
     // Finally, we restore the callee-saved register values and branch back.
-    pop {r4-r12, r14}
+    pop {r4-r12, pc}
     bx lr
 
 .global mixing_asm
@@ -200,14 +200,66 @@ mixing_asm:
     // Arguments are placed in r0 and r1, the return value should go in r0.
     // To be certain, we just push all of them onto the stack.
     push {r4-r12, r14}
-    bl a_asm
-    ldr r4, =K
+    
+    ldr r4, =t
     ldr r4, [r4]
     ldr r5, =z
-    str r0, [r5, r4] //z[t] = a()
-    //TODO
+    bl a_asm
+    str r0, [r5, r4]
+    mov r12, r0
+
+
+    add r5, r4, 1
+    mov r9, 90
+    mul r6, r4, r9 // t
+    mul r7, r5, r9 // t+1
+
+
+    ldr r9, =B
+
+    mov r10 , 0 // counter
+
+mixing_B:
+    add r8, r10, 1
+    add r8, r6, r8
+    ldr r11, [r9, r8]
+    add r8, r7, r10
+    str r11, [r9, r8]
+
+    add r10, r10, 1
+    cmp r10, 88
+    ble mixing_B
+
+    add r8, r7, 89
+    bl NFSR2_asm
+    eor r12, r12, r0
+    str r12, [r9, r8]
+
+    mov r9, 31
+    mul r6, r4, r9 // t
+    mul r7, r5, r9 // t+1
+
+    ldr r9, =S
+
+    mov r10 , 0 // counter
+mixing_S:
+    add r8, r10, 1
+    add r8, r6, r8
+    ldr r11, [r9, r8]
+    add r8, r7, r10
+    str r11, [r9, r8]
+
+    add r10, r10, 1
+    cmp r10, 29
+    ble diffusion_S
+
+    add r8, r7, 30
+    bl NFSR1
+    eor r12, r12, r0
+    str r12, [r9, r8]
+
     // Finally, we restore the callee-saved register values and branch back.
-    pop {r4-r12, r14}
+    pop {r4-r12, pc}
     bx lr
 
 .global keyadd_asm
@@ -219,7 +271,7 @@ keyadd_asm:
     push {r4-r12, r14}
     //TODO
     // Finally, we restore the callee-saved register values and branch back.
-    pop {r4-r12, r14}
+    pop {r4-r12, pc}
     bx lr
 
 .global diffusion_asm
@@ -229,9 +281,59 @@ diffusion_asm:
     // Arguments are placed in r0 and r1, the return value should go in r0.
     // To be certain, we just push all of them onto the stack.
     push {r4-r12, r14}
-    //TODO
+    
+
+    ldr r4, =t
+    ldr r4, [r4]
+    add r5, r4, 1
+    mov r9, 90
+    mul r6, r4, r9 // t
+    mul r7, r5, r9 // t+1
+
+
+    ldr r9, =B
+
+    mov r10 , 0 // counter
+
+diffusion_B:
+    add r8, r10, 1
+    add r8, r6, r8
+    ldr r11, [r9, r8]
+    add r8, r7, r10
+    str r11, [r9, r8]
+
+    add r10, r10, 1
+    cmp r10, 87
+    ble diffusion_B
+
+    add r8, r7, 89
+    bl NFSR2_asm
+    str r0, [r9, r8]
+
+    mov r9, 31
+    mul r6, r4, r9 // t
+    mul r7, r5, r9 // t+1
+
+    ldr r9, =S
+
+    mov r10 , 0 // counter
+diffusion_S:
+    add r8, r10, 1
+    add r8, r6, r8
+    ldr r11, [r9, r8]
+    add r8, r7, r10
+    str r11, [r9, r8]
+
+    add r10, r10, 1
+    cmp r10, 28
+    ble diffusion_S
+
+    add r8, r7, 30
+    bl NFSR1_asm
+    str r0, [r9, r8]
+
     // Finally, we restore the callee-saved register values and branch back.
-    pop {r4-r12, r14}
+    pop {r4-r12, pc}
     bx lr
 
 .global NFSR1_asm
@@ -548,7 +650,7 @@ NFSR1_asm:
     mov r0, r12
 
     // Finally, we restore the callee-saved register values and branch back.
-    pop {r4-r12, r14}
+    pop {r4-r12, pc}
     bx lr
 
 .global NFSR2_asm
@@ -690,7 +792,7 @@ NFSR2_asm:
     mov r0, r12
 
     // Finally, we restore the callee-saved register values and branch back.
-    pop {r4-r12, r14}
+    pop {r4-r12, pc}
     bx lr
 
 .global construct_asm
@@ -702,7 +804,7 @@ construct_asm:
     push {r4-r12, r14}
     //TODO
     // Finally, we restore the callee-saved register values and branch back.
-    pop {r4-r12, r14}
+    pop {r4-r12, pc}
     bx lr
 
 .global keystreamGeneration_asm
@@ -714,7 +816,7 @@ keystreamGeneration_asm:
     push {r4-r12, r14}
     //TODO
     // Finally, we restore the callee-saved register values and branch back.
-    pop {r4-r12, r14}
+    pop {r4-r12, pc}
     bx lr
 
 .global keystreamGenerationSpecification_asm
@@ -726,7 +828,7 @@ keystreamGenerationSpecification_asm:
     push {r4-r12}
     //TODO
     // Finally, we restore the callee-saved register values and branch back.
-    pop {r4-r12}
+    pop {r4-r12, pc}
     bx lr
 
 .global a_asm_Lt
@@ -766,7 +868,7 @@ a_asm_Lt:
     eor r12, r12, r11
     mov r0, r12
 
-    pop {r4-r12, r14}
+    pop {r4-r12, pc}
     bx lr
 
 
@@ -814,7 +916,7 @@ a_asm_Qt:
     
     
     mov r0, r12
-    pop {r4-r12, r14}
+    pop {r4-r12, pc}
     bx lr
 
 .global a_asm_Tt
@@ -927,7 +1029,7 @@ a_asm_Tt:
 
     mov r0, r12 
 
-    pop {r4-r12, r14}
+    pop {r4-r12, pc}
     bx lr
 
 .global a_asm_Ttildet
@@ -990,7 +1092,7 @@ a_asm_Ttildet:
 
     mov r0, r12 
 
-    pop {r4-r12, r14}
+    pop {r4-r12, pc}
     bx lr
 
 .global a_asm
@@ -1022,7 +1124,7 @@ a_asm:
     bl a_return
 
 
-    pop {r4-r12, r14}
+    pop {r4-r12, pc}
     bx lr
 
 
@@ -1048,5 +1150,5 @@ a_return:
 
     
     // Finally, we restore the callee-saved register values and branch back.
-    pop {r4-r12, r14}
+    pop {r4-r12, pc}
     bx lr

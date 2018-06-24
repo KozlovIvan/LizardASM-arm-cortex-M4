@@ -30,6 +30,7 @@ extern uint8_t a_asm_Tt(void);
 extern uint8_t a_asm_Ttildet(void);
 
 void loadkey(uint8_t*);
+void loadIV(uint8_t*);
 void initRegisters(void);
 void mixing(void);
 void keyadd(void);
@@ -59,7 +60,7 @@ uint32_t keystream_size = KEYSTREAM_SIZE;
 uint8_t keystream[KEYSTREAM_SIZE];
 uint8_t a257 = 0;
 int t = 0;
-uint8_t K[120];
+uint8_t K[125];
 uint8_t IV[64];
 uint8_t z[128];
 uint8_t L[KEYSTREAM_SIZE+128];
@@ -106,7 +107,7 @@ void _initialization(uint8_t *key, uint8_t *iv){
     //Phase 4
     t=129;
     for(; t<=256; ++t){
-        diffusion();
+        diffusion_asm();
     }
 
 }
@@ -120,11 +121,57 @@ void mixing(){
     }
 
     B[t+1][89] = z[t] ^ NFSR2_asm();
-
+    //NFSR2_eor();
     for(int i = 0; i <= 29; ++i){
         S[t+1][i] = S[t][i+1];
     }
-    S[t+1][30] = z[t] ^ NFSR1_asm();
+    S[t+1][30] = z[t] ^ NFSR1();
+}
+
+uint8_t NFSR1(){
+
+    return \
+    S[t][0]  ^ S[t][2]  ^ \
+    S[t][5]  ^ S[t][6]  ^ \
+    S[t][15] ^ S[t][17] ^ \
+    S[t][18] ^ S[t][20] ^ \
+    S[t][25] ^ S[t][8]  * \
+    S[t][18] ^ S[t][8]  * \
+    S[t][20] ^ S[t][12] * \
+    S[t][21] ^ S[t][14] * \
+    S[t][19] ^ S[t][17] * \
+    S[t][21] ^ S[t][20] * \
+    S[t][22] ^ S[t][4]  * \
+    S[t][12] * S[t][22] ^ \
+    S[t][4]  * S[t][19] * \
+    S[t][22] ^ S[t][7]  * \
+    S[t][20] * S[t][21] ^ \
+    S[t][8]  * S[t][18] * \
+    S[t][22] ^ S[t][8]  * \
+    S[t][20] * S[t][22] ^ \
+    S[t][12] * S[t][19] * \
+    S[t][22] ^ S[t][20] * \
+    S[t][21] * S[t][22] ^ \
+    S[t][4]  * S[t][7]  * \
+    S[t][12] * S[t][21] ^ \
+    S[t][4]  * S[t][7]  * \
+    S[t][19] * S[t][21] ^ \
+    S[t][4]  * S[t][12] * \
+    S[t][21] * S[t][22] ^ \
+    S[t][4]  * S[t][19] * \
+    S[t][21] * S[t][22] ^ \
+    S[t][7]  * S[t][8]  * \
+    S[t][18] * S[t][21] ^ \
+    S[t][7]  * S[t][8]  * \
+    S[t][20] * S[t][21] ^ \
+    S[t][7]  * S[t][12] * \
+    S[t][19] * S[t][21] ^ \
+    S[t][8]  * S[t][18] * \
+    S[t][21] * S[t][22] ^ \
+    S[t][8]  * S[t][20] * \
+    S[t][21] * S[t][22] ^ \
+    S[t][12] * S[t][19] * \
+    S[t][21] * S[t][22];
 }
 
 
@@ -141,21 +188,6 @@ void keyadd(){
     S[129][30] = 1;
 }
 
-void diffusion(){
-
-    for(int i = 0; i <= 88; ++i){
-        B[t+1][i] = B[t][i+1];
-    }
-
-    B[t+1][89] = NFSR2_asm();
-
-    for(int i = 0; i <= 29; ++i){
-        S[t+1][i] = S[t][i+1];
-    }
-
-    S[t+1][30] = NFSR1();
-
-}
 
 void keysteamGeneration(int length){
 
@@ -163,11 +195,14 @@ void keysteamGeneration(int length){
         keystream[i] = 0;
     }
 
-    for(int i = 0; i < length; ++i){
+    for(int i = 0; i < length-1; ++i){
         keystream[i] = a_asm();
-        diffusion();
+        diffusion_asm();
         ++t;
     }
+        keystream[length-1] = a_asm();
+        //diffusion_asm();
+        
 }
 
 uint8_t* keystreamGenerationSpecification(uint8_t length){
@@ -182,7 +217,7 @@ uint8_t* keystreamGenerationSpecification(uint8_t length){
         --length_t;
     }
     for(int i = 0; i <= length_t; ++i){
-        diffusion();
+        diffusion_asm();
         ++t;
         z[t] = a_asm();
     }
