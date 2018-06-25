@@ -1123,3 +1123,30 @@ a_return:
     // Finally, we restore the callee-saved register values and branch back.
     pop {r4-r12, pc}
     bx lr
+
+.global keyadd_B
+.type keyadd_B, %function
+keyadd_B:
+    push {r4-r12, r14}
+    mov r4, 1
+    mov r5, 1
+    mov r6, 0
+    ldr r9, =B // B
+    ldr r10, =K // K
+loopB:
+    add r11, r6, r4 // [128][i]
+    ldr r4, [r9, r11] // r3 = B[128][i]
+    ldr r12, [r10, r6]
+    eors r12, r12, r12
+
+    mov r11, 0
+    add r11, r5, r6
+    str r12 , [r10, r11]
+    
+
+    add r6, r6, 1
+    cmp r7, 89
+    ble loopB
+
+    pop {r4-r12, pc}
+    bx lr

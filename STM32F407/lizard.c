@@ -8,21 +8,14 @@
 #define LENGTH_TEST (uint8_t)128
 
 
-void loadkey(uint8_t*);
-void loadIV(uint8_t*);
-void initRegisters(void);
 void mixing(void);
 void keyadd(void);
-void diffusion(void);
 uint8_t NFSR1(void);
 void _construct(uint8_t*, uint8_t*);
 void _initialization(uint8_t*, uint8_t*);
-void keysteamGeneration(int);
-uint8_t* keystreamGenerationSpecification(uint8_t);
 char* binArray2hex(uint8_t*);
 void hex2binArray(char* , uint8_t*);
 uint8_t hex2int(char);
-uint8_t* getKeystream(void);
 void test(void);
 void test1(void);
 void test2(void);
@@ -49,13 +42,13 @@ extern uint8_t a_asm_Qt(void);
 extern uint8_t a_asm_Tt(void);
 extern uint8_t a_asm_Ttildet(void);
 
+
 //for asm
 uint32_t keystream_size = KEYSTREAM_SIZE;
 //for asm
 
 
 uint8_t keystream[KEYSTREAM_SIZE];
-uint8_t bufferpro[500];
 uint8_t a257 = 0;
 int t = 0;
 uint8_t K[125];
@@ -123,7 +116,7 @@ void mixing(){
     for(int i = 0; i <= 29; ++i){
         S[t+1][i] = S[t][i+1];
     }
-    S[t+1][30] = z[t] ^ NFSR1();
+    S[t+1][30] = z[t] ^ NFSR1_asm();
 }
 
 uint8_t NFSR1(){
@@ -172,17 +165,23 @@ uint8_t NFSR1(){
     S[t][21] * S[t][22];
 }
 
+void keyadd_1(){
+
+}
 
 void keyadd(){
-
+    
     for(int i = 0; i <= 89; ++i){
         B[129][i] =  B[128][i] ^ K[i];
     }
 
+
     for(int i = 0; i <= 29; ++i){
         S[129][i] = S[128][i] ^ K[i+90];
     }
+    //keyadd_S
 
+    //keyadd_S_1
     S[129][30] = 1;
 }
 
