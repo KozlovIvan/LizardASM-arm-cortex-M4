@@ -57,7 +57,7 @@ uint8_t z[128];
 uint8_t L[KEYSTREAM_SIZE+128];
 uint8_t Q[KEYSTREAM_SIZE+128];
 uint8_t T[KEYSTREAM_SIZE+128];
-uint8_t Ttilde[KEYSTREAM_SIZE+129];
+uint8_t Ttilde[KEYSTREAM_SIZE+128];
 uint8_t B[KEYSTREAM_SIZE+259][90];
 uint8_t S[KEYSTREAM_SIZE+259][31];
 
@@ -72,8 +72,8 @@ void _construct(uint8_t  *key, uint8_t *iv){
         Q[i] = 0;
         T[i] = 0;
         Ttilde[i] = 0;
-        _initialization(key, iv);
     }
+    _initialization(key, iv);
     if(KEYSTREAM_SIZE > 0){
         keystreamGeneration_asm(KEYSTREAM_SIZE);
     }
@@ -119,55 +119,7 @@ void mixing(){
     S[t+1][30] = z[t] ^ NFSR1_asm();
 }
 
-uint8_t NFSR1(){
 
-    return \
-    S[t][0]  ^ S[t][2]  ^ \
-    S[t][5]  ^ S[t][6]  ^ \
-    S[t][15] ^ S[t][17] ^ \
-    S[t][18] ^ S[t][20] ^ \
-    S[t][25] ^ S[t][8]  * \
-    S[t][18] ^ S[t][8]  * \
-    S[t][20] ^ S[t][12] * \
-    S[t][21] ^ S[t][14] * \
-    S[t][19] ^ S[t][17] * \
-    S[t][21] ^ S[t][20] * \
-    S[t][22] ^ S[t][4]  * \
-    S[t][12] * S[t][22] ^ \
-    S[t][4]  * S[t][19] * \
-    S[t][22] ^ S[t][7]  * \
-    S[t][20] * S[t][21] ^ \
-    S[t][8]  * S[t][18] * \
-    S[t][22] ^ S[t][8]  * \
-    S[t][20] * S[t][22] ^ \
-    S[t][12] * S[t][19] * \
-    S[t][22] ^ S[t][20] * \
-    S[t][21] * S[t][22] ^ \
-    S[t][4]  * S[t][7]  * \
-    S[t][12] * S[t][21] ^ \
-    S[t][4]  * S[t][7]  * \
-    S[t][19] * S[t][21] ^ \
-    S[t][4]  * S[t][12] * \
-    S[t][21] * S[t][22] ^ \
-    S[t][4]  * S[t][19] * \
-    S[t][21] * S[t][22] ^ \
-    S[t][7]  * S[t][8]  * \
-    S[t][18] * S[t][21] ^ \
-    S[t][7]  * S[t][8]  * \
-    S[t][20] * S[t][21] ^ \
-    S[t][7]  * S[t][12] * \
-    S[t][19] * S[t][21] ^ \
-    S[t][8]  * S[t][18] * \
-    S[t][21] * S[t][22] ^ \
-    S[t][8]  * S[t][20] * \
-    S[t][21] * S[t][22] ^ \
-    S[t][12] * S[t][19] * \
-    S[t][21] * S[t][22];
-}
-
-void keyadd_1(){
-
-}
 
 void keyadd(){
     

@@ -115,7 +115,7 @@ loadkey_loop:
     ldr r6, [r0, r4]
     str r6, [r5, r4]
     add r4, r4, 1       // increment counter
-    cmp r4, 119         // compare to 119
+    cmp r4, 120         // compare to 119
     ble loadkey_loop    // if less or equal jump to the begining of the loop
     
     // Finally, we restore the callee-saved register values and branch back.
@@ -136,7 +136,7 @@ loadiv_loop:
     ldr r6, [r0, r4]
     str r6, [r5, r4]
     add r4, r4, 1       // increment counter
-    cmp r4, 60          // compare to 62
+    cmp r4, 61          // compare to 62
     ble loadiv_loop     // if less or equal jump to the begining of the loop
 
     // Finally, we restore the callee-saved register values and branch back.
