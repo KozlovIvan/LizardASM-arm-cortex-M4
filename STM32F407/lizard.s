@@ -29,74 +29,22 @@ _construct_asm:
     // Arguments are placed in r0 and r1, the return value should go in r0.
     // To be certain, we just push all of them onto the stack.
     push {r4-r12, r14}
-    mov r4, 0       // counter
-    mov r5, 0       // zero val
-    ldr r6, =z      // load extern symbol z
-    ldr r7, =keystream_size
-
-construct_z:
-    str r5, [r6, r4]
-    add r4, r4, 1       // increment counter
-    cmp r4, r7
-    blt construct_z
-
-    ldr r6, =L          // load extern symbol L
-    ldr r8, =Q          // load extern symbol Q
-    ldr r9, =T          // load extern symbol T
-    ldr r10, =Ttilde    // load extern symbol Ttilde
-    mov r4, 0           // reset counter
-
-construct_LQTTtilde:
-    str r5, [r6, r4]
-    str r5, [r8, r4]
-    str r5, [r9, r4]
-    str r5, [r10, r4]
-    bl _initialization_asm
-    add r4, r4, 1       // increment counter
-    cmp r4, r7
-    blt construct_LQTTtilde
-
-    cmp r7, 0
-    mov r0, r7
-    bgt keystreamGeneration_asm
 
     // Finally, we restore the callee-saved register values and branch back.
     pop {r4-r12, pc}
     bx lr
 
-.global _initialization_asm
-.type _initialization_asm, %function
-_initialization_asm:
+.global _initialization_phase1
+.type _initialization_phase1, %function
+_initialization_phase1:
     // Remember the ABI: we must not destroy the values in r4 to r12.
     // Arguments are placed in r0 and r1, the return value should go in r0.
     // To be certain, we just push all of them onto the stack.
     push {r4-r12, r14}
     bl loadkey_asm
+    mov r0, r1
     bl loadIV_asm
     bl initRegisters_asm
-    ldr r5, =t
-    mov r4, 0
-    str r4, [r5]
-
-phase_2:
-    bl mixing_asm
-    add r4, r4, 1
-    str r4, [r5]
-    cmp r4, 127
-    ble phase_2
-
-
-    mov r4, 129 // counter
-    ldr r5, =t
-    str r4, [r5]
-
-phase_4:
-    bl diffusion_asm
-    add r4, r4, 1
-    str r4, [r5]
-    cmp r4, 256
-    ble phase_4
-
     // Finally, we restore the callee-saved register values and branch back.
     pop {r4-r12, pc}
     bx lr

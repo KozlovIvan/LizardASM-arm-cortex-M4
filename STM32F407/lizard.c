@@ -21,7 +21,6 @@ void test4(void); //not part of the stream
 
 extern void lizard_asm(void);
 extern void _construct_asm(uint8_t*, uint8_t*);
-extern void _initialization_asm(uint8_t*, uint8_t*);
 extern void loadkey_asm(uint8_t*);
 extern void loadIV_asm(uint8_t*);
 extern void initRegisters_asm(void);
@@ -40,7 +39,7 @@ extern uint8_t a_asm_Tt(void);
 extern uint8_t a_asm_Ttildet(void);
 extern void keyadd_B(uint8_t);
 extern void keyadd_S(uint8_t);
-extern void _initialization_phase1(void);
+extern void _initialization_phase1(uint8_t*, uint8_t*);
 extern void keyadd_S_1(void);
 extern uint8_t keyadd_S_eor(uint8_t);
 extern uint8_t keyadd_B_eor(uint8_t);
@@ -77,9 +76,7 @@ void _construct(uint8_t  *key, uint8_t *iv){
         Ttilde[i] = 0;
     }
    //Phase 1
-    loadkey_asm(key);
-    loadIV_asm(iv);
-    initRegisters_asm();
+    _initialization_phase1(key, iv);
     //Phase 2
     for(;t<=127; ++t){
         mixing();
