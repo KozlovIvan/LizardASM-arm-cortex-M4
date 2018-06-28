@@ -4,14 +4,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define KEYSTREAM_SIZE (uint8_t)128
-#define LENGTH_TEST (uint8_t)128
+#define KEYSTREAM_SIZE 128
+
 
 
 void mixing(void);
-void keyadd(void);
 void _construct(uint8_t*, uint8_t*);
-void _initialization(uint8_t*, uint8_t*);
 char* binArray2hex(uint8_t*); //not part of stream
 void hex2binArray(char* , uint8_t*); //not part of the stream
 uint8_t hex2int(char); // not part of the stream
@@ -46,6 +44,8 @@ extern void _initialization_phase1(void);
 extern void keyadd_S_1(void);
 extern uint8_t keyadd_S_eor(uint8_t);
 extern uint8_t keyadd_B_eor(uint8_t);
+extern void keyadd_S_full(void);
+extern void _construct_z(void);
 
 
 //for asm
@@ -69,44 +69,37 @@ uint8_t S[KEYSTREAM_SIZE+259][31];
 
 
 void _construct(uint8_t  *key, uint8_t *iv){
-    for (int i =0;i<KEYSTREAM_SIZE; ++i){
-        z[i]=0;
-    }
+    _construct_z();
     for(int i = 0; i <KEYSTREAM_SIZE+128; ++i){
         L[i] = 0;
         Q[i] = 0;
         T[i] = 0;
         Ttilde[i] = 0;
     }
-    _initialization(key, iv);
-    if(KEYSTREAM_SIZE > 0){
-        keystreamGeneration_asm(KEYSTREAM_SIZE);
-    }
-}
-
-void _initialization(uint8_t *key, uint8_t *iv){
-
-    //Phase 1
+   //Phase 1
     loadkey_asm(key);
     loadIV_asm(iv);
-    //t=0;
     initRegisters_asm();
-
     //Phase 2
     for(;t<=127; ++t){
         mixing();
     }
-
     //Phase 3
-    keyadd();
-
+    for(uint8_t i = 0; i <= 89; ++i){
+        keyadd_B(i);
+    }
+    for(uint8_t i = 0; i <= 29; ++i){
+        keyadd_S(i);
+    }
+    keyadd_S_1();
     //Phase 4
     t=129;
     for(; t<=256; ++t){
         diffusion_asm();
     }
-
+    keystreamGeneration_asm(KEYSTREAM_SIZE);
 }
+
 
 
 void mixing(){
@@ -127,21 +120,6 @@ void mixing(){
 
 
 
-void keyadd(){
-
-    for(uint8_t i = 0; i <= 89; ++i){
-        keyadd_B(i);
-    }
- 
-
-    for(uint8_t i = 0; i <= 29; ++i){
-        keyadd_S(i);
-    }
-    //keyadd_S
-
-    keyadd_S_1();
-    //S[129][30] = 1;
-}
 
 
 char* binArray2hex(uint8_t * bin) {

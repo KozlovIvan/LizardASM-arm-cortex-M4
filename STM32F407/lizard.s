@@ -1173,6 +1173,22 @@ keyadd_S:
     pop {r4-r12, pc}
     bx lr
 
+
+.global keyadd_S_full
+.type keyadd_S_full, %function
+keyadd_S_full:
+    push {r0, r4-r12, r14}
+    mov r0, 0
+s_full:
+    bl keyadd_S
+    add r0, r0, 1
+    cmp r0, 29
+    ble s_full
+
+
+    pop {r0, r4-r12, pc}
+    bx lr
+
 .global keyadd_S_eor
 .type keyadd_S_eor, %function
 keyadd_S_eor:
@@ -1204,5 +1220,25 @@ keyadd_S_1:
     mul r8, r8, r5
     add r8, r8, 30 
     str r7, [r4, r8]
+    pop {r4-r12, pc}
+    bx lr
+
+
+.global _construct_z
+.type _construct_z, %function
+_construct_z:
+    push {r4-r12, r14}
+
+    ldr r4, =z
+    ldr r5, =keystream_size
+    ldr r5, [r5]
+    mov r6, 0
+    mov r7, 0
+loopz:
+    str r6, [r4, r7]
+    add r7, r7, 1
+    cmp r7, r5
+    blt loopz
+
     pop {r4-r12, pc}
     bx lr
