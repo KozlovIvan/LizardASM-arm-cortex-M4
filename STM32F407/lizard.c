@@ -10,17 +10,16 @@
 
 void mixing(void);
 void keyadd(void);
-uint8_t NFSR1(void);
 void _construct(uint8_t*, uint8_t*);
 void _initialization(uint8_t*, uint8_t*);
-char* binArray2hex(uint8_t*);
-void hex2binArray(char* , uint8_t*);
-uint8_t hex2int(char);
-void test(void);
-void test1(void);
-void test2(void);
-void test3(void);
-void test4(void);
+char* binArray2hex(uint8_t*); //not part of stream
+void hex2binArray(char* , uint8_t*); //not part of the stream
+uint8_t hex2int(char); // not part of the stream
+void test(void); //not part of the stream
+void test1(void); //not part of the stream
+void test2(void); //not part of the stream
+void test3(void); // not part of the stream
+void test4(void); //not part of the stream
 
 extern void lizard_asm(void);
 extern void _construct_asm(uint8_t*, uint8_t*);
@@ -41,6 +40,12 @@ extern uint8_t a_asm_Lt(void);
 extern uint8_t a_asm_Qt(void);
 extern uint8_t a_asm_Tt(void);
 extern uint8_t a_asm_Ttildet(void);
+extern void keyadd_B(uint8_t);
+extern void keyadd_S(uint8_t);
+extern void _initialization_phase1(void);
+extern void keyadd_S_1(void);
+extern uint8_t keyadd_S_eor(uint8_t);
+extern uint8_t keyadd_B_eor(uint8_t);
 
 
 //for asm
@@ -51,13 +56,13 @@ uint32_t keystream_size = KEYSTREAM_SIZE;
 uint8_t keystream[KEYSTREAM_SIZE];
 uint8_t a257 = 0;
 int t = 0;
-uint8_t K[125];
+uint8_t K[120];
 uint8_t IV[64];
 uint8_t z[128];
 uint8_t L[KEYSTREAM_SIZE+128];
 uint8_t Q[KEYSTREAM_SIZE+128];
 uint8_t T[KEYSTREAM_SIZE+128];
-uint8_t Ttilde[KEYSTREAM_SIZE+128];
+uint8_t Ttilde[KEYSTREAM_SIZE+259];
 uint8_t B[KEYSTREAM_SIZE+259][90];
 uint8_t S[KEYSTREAM_SIZE+259][31];
 
@@ -84,7 +89,7 @@ void _initialization(uint8_t *key, uint8_t *iv){
     //Phase 1
     loadkey_asm(key);
     loadIV_asm(iv);
-   // t=0;
+    //t=0;
     initRegisters_asm();
 
     //Phase 2
@@ -107,6 +112,7 @@ void _initialization(uint8_t *key, uint8_t *iv){
 void mixing(){
 
     z[t] = a_asm();
+
     for(int i = 0; i<=88; ++i) {
         B[t + 1][i] = B[t][i + 1];
     }
@@ -122,19 +128,19 @@ void mixing(){
 
 
 void keyadd(){
-    
-    for(int i = 0; i <= 89; ++i){
-        B[129][i] =  B[128][i] ^ K[i];
+
+    for(uint8_t i = 0; i <= 89; ++i){
+        keyadd_B(i);
     }
+ 
 
-
-    for(int i = 0; i <= 29; ++i){
-        S[129][i] = S[128][i] ^ K[i+90];
+    for(uint8_t i = 0; i <= 29; ++i){
+        keyadd_S(i);
     }
     //keyadd_S
 
-    //keyadd_S_1
-    S[129][30] = 1;
+    keyadd_S_1();
+    //S[129][30] = 1;
 }
 
 

@@ -162,16 +162,16 @@ init_register_B_p1:
     eor r11, r9, r10
     str r11, [r5, r4]
     add r4, r4, 1
-    cmp r4, 63
-    blt init_register_B_p1
+    cmp r4, 62
+    ble init_register_B_p1
 
     mov r4, 64 //update counter
 init_register_B_p2:
     ldr r9, [r6, r4]
     str r9, [r5, r4]
     add r4, r4, 1
-    cmp r4, 89
-    blt init_register_B_p2
+    cmp r4, 88
+    ble init_register_B_p2
 
     mov r4, 0 // reininit counter
     add r11, r4, 90 // counter offset
@@ -180,8 +180,8 @@ init_register_S:
     str r9, [r8, r4]
     add r4,r4, 1
     add r11, r11, 1
-    cmp r4, 28
-    blt init_register_S
+    cmp r4, 27
+    ble init_register_S
 
     ldr r9, [r6, 119]
     eor r9, 1
@@ -201,6 +201,10 @@ mixing_asm:
     // To be certain, we just push all of them onto the stack.
     push {r4-r12, r14}
     //TODO
+    ldr r4, =t
+    ldr r5, =z
+    bl a_asm
+    str r0, [r5, r4]
     // Finally, we restore the callee-saved register values and branch back.
     pop {r4-r12, pc}
     bx lr
@@ -1128,25 +1132,77 @@ a_return:
 .type keyadd_B, %function
 keyadd_B:
     push {r4-r12, r14}
-    mov r4, 1
-    mov r5, 1
-    mov r6, 0
-    ldr r9, =B // B
-    ldr r10, =K // K
-loopB:
-    add r11, r6, r4 // [128][i]
-    ldr r4, [r9, r11] // r3 = B[128][i]
-    ldr r12, [r10, r6]
-    eors r12, r12, r12
+    ldr r4, =B
+    mov.w r6, 129
+    mov.w r7, 90
+    mul.w r7, r7, r6
+    add.w r7, r7, r0
+    bl keyadd_B_eor
+    str r0, [r4, r7]
+    pop {r4-r12, pc}
+    bx lr
 
-    mov r11, 0
-    add r11, r5, r6
-    str r12 , [r10, r11]
-    
+.global keyadd_B_eor
+.type keyadd_B_eor, %function
+keyadd_B_eor:
+    push {r4-r12, r14}
+    ldr r4, =B
+    ldr r5, =K
+    mov r6, 128
+    mov r7, 90
+    mul r7, r7, r6
+    add r7, r0
+    ldr r8, [r4, r7] // B[128][i]
+    mov r7, r0
+    ldr r9, [r5, r7]
+    eor r0, r8, r9
+    pop {r4-r12, pc}
+    bx lr
 
-    add r6, r6, 1
-    cmp r7, 89
-    ble loopB
+.global keyadd_S
+.type keyadd_S, %function
+keyadd_S:
+    push {r4-r12, r14}
+    ldr r4, =S
+    mov.w r6, 129
+    mov.w r7, 31
+    mul.w r7, r7, r6
+    add.w r7, r7, r0
+    bl keyadd_S_eor
+    str r0, [r4, r7]
+    pop {r4-r12, pc}
+    bx lr
 
+.global keyadd_S_eor
+.type keyadd_S_eor, %function
+keyadd_S_eor:
+    push {r4-r12, r14}
+    ldr r4, =S
+    ldr r5, =K
+    mov.w r6, 128
+    mov.w r7, 31
+    mul.w r7, r7, r6
+    add.w r7, r0
+    ldr r8, [r4, r7] // S[128][i]
+    mov.w r7, 90
+    add.w r7, r0
+    ldr r9, [r5, r7]
+    eor r0, r8, r9
+    pop {r4-r12, pc}
+    bx lr
+
+
+
+.global keyadd_S_1
+.type keyadd_S_1, %function
+keyadd_S_1:
+    push {r4-r12, r14}
+    ldr r4, =S
+    mov r5, 31
+    mov r7, 1
+    mov r8, 129
+    mul r8, r8, r5
+    add r8, r8, 30 
+    str r7, [r4, r8]
     pop {r4-r12, pc}
     bx lr
