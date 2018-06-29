@@ -4,6 +4,39 @@
 #include <stdlib.h>
 #include <string.h>
 
+
+// STM32F407  stack  is from 0x20020000  to 0x20000000 , growing  down
+//#define  MIN_STACK_ADDR 0x20000000
+//#define  MAX_STACK_ADDR 0x20020000
+#define  MAX_SIZE 0x15000
+
+volatile  unsigned  char *p;
+unsigned  int c;
+const  uint8_t  canary = 0x42;
+
+#define  FILL_STACK()          \
+p = &a;                         \
+while (p > &a - MAX_SIZE)       \
+    *(p--) = canary;
+
+#define  CHECK_STACK()          \
+c = MAX_SIZE;                    \
+p = &a - MAX_SIZE + 1;           \
+while  (*p ==  canary  && p < &a) {  \
+    p++;     \
+    c--;     \
+}        \
+char  outs [120];      \
+if (c >= MAX_SIZE) {   \
+    send_USART_str("Stack  usage  exceeds  MAX_SIZE.");  \
+} else {  \
+    snprintf(outs , 120,   "This  took %u stack  bytes.", c); \
+    send_USART_str(outs);  \
+} 
+
+
+
+
 #define KEYSTREAM_SIZE 128
 
 
@@ -54,6 +87,8 @@ uint8_t S[KEYSTREAM_SIZE+259][31];
 
 
 void _construct(uint8_t  *key, uint8_t *iv){
+    volatile  unsigned  char a;
+    //FILL_STACK();
     _construct_z();
     for(int i = 0; i <KEYSTREAM_SIZE+128; ++i){
         L[i] = 0;
@@ -71,6 +106,7 @@ void _construct(uint8_t  *key, uint8_t *iv){
     keyadd_S_1();
     _initialization_phase4();
     keystreamGeneration_asm(KEYSTREAM_SIZE);
+    CHECK_STACK();
 }
 
 
@@ -90,9 +126,6 @@ void mixing(){
     }
     S[t+1][30] = z[t] ^ NFSR1_asm();
 }
-
-
-
 
 
 char* binArray2hex(uint8_t * bin) {
@@ -164,6 +197,7 @@ void test2(){
     hex2binArray(Kstr, Kbin);
     uint8_t IVbin[66];
     hex2binArray(IVstr, IVbin);
+
     _construct(Kbin, IVbin);
     for(int i = 0; i< 120; i++){
         sprintf(str+i, "%x",K[i]);

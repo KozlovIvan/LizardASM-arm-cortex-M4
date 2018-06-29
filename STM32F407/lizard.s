@@ -1,8 +1,7 @@
 .syntax unified
 .cpu cortex-m4
-
 .extern t, K, IV, z, L, Q, T, Ttilde, B, S, a257, keystream, keystream_size
-
+.align 2
 
 // ╦  ╦╔═╗╔═╗╦═╗╔╦╗
 // ║  ║╔═╝╠═╣╠╦╝ ║║
@@ -45,19 +44,6 @@ _initialization_phase1:
     // Finally, we restore the callee-saved register values and branch back.
     pop {r4-r12, pc}
     bx lr
-
-.global _initialization_phase2
-.type _initialization_phase2, %function
-_initialization_phase2:
-    // Remember the ABI: we must not destroy the values in r4 to r12.
-    // Arguments are placed in r0 and r1, the return value should go in r0.
-    // To be certain, we just push all of them onto the stack.
-    push {r4-r12, r14}
-    
-    // Finally, we restore the callee-saved register values and branch back.
-    pop {r4-r12, pc}
-    bx lr
-
 
 
 .global _initialization_phase3_B
@@ -214,21 +200,6 @@ init_register_S:
     pop {r4-r12, pc}
     bx lr
 
-.global mixing_asm
-.type mixing_asm, %function
-mixing_asm:
-    // Remember the ABI: we must not destroy the values in r4 to r12.
-    // Arguments are placed in r0 and r1, the return value should go in r0.
-    // To be certain, we just push all of them onto the stack.
-    push {r4-r12, r14}
-    //TODO
-    ldr r4, =t
-    ldr r5, =z
-    bl a_asm
-    str r0, [r5, r4]
-    // Finally, we restore the callee-saved register values and branch back.
-    pop {r4-r12, pc}
-    bx lr
 
 .global keyadd_asm
 .type keyadd_asm, %function
@@ -764,17 +735,7 @@ NFSR2_asm:
     pop {r4-r12, pc}
     bx lr
 
-.global construct_asm
-.type construct_asm, %function
-construct_asm:
-    // Remember the ABI: we must not destroy the values in r4 to r12.
-    // Arguments are placed in r0 and r1, the return value should go in r0.
-    // To be certain, we just push all of them onto the stack.
-    push {r4-r12, r14}
-    //TODO
-    // Finally, we restore the callee-saved register values and branch back.
-    pop {r4-r12, pc}
-    bx lr
+
 
 .global keystreamGeneration_asm
 .type keystreamGeneration_asm, %function
@@ -815,17 +776,6 @@ keystream_gen:
     pop {r4-r12, pc}
     bx lr
 
-.global keystreamGenerationSpecification_asm
-.type keystreamGenerationSpecification_asm, %function
-keystreamGenerationSpecification_asm:
-    // Remember the ABI: we must not destroy the values in r4 to r12.
-    //Arguments are placed in r0 and r1, the return value should go in r0.
-    // To be certain, we just push all of them onto the stack.
-    push {r4-r12}
-    //TODO
-    // Finally, we restore the callee-saved register values and branch back.
-    pop {r4-r12, pc}
-    bx lr
 
 .global a_asm_Lt
 .type a_asm_Lt, %function
@@ -1228,8 +1178,6 @@ keyadd_S_eor:
     pop {r4-r12, pc}
     bx lr
 
-
-
 .global keyadd_S_1
 .type keyadd_S_1, %function
 keyadd_S_1:
@@ -1270,9 +1218,6 @@ _construct_L:
     MOVS    R1, #0
     LDR     R0, =_edata
     B.W     memset
-
-
-
 
 .global mixing_p1
 .type mixing_p1, %function
