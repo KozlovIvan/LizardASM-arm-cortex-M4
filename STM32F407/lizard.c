@@ -19,7 +19,7 @@ void test2(void); //not part of the stream
 void test3(void); // not part of the stream
 void test4(void); //not part of the stream
 
-extern void lizard_asm(void);
+
 extern void _construct_asm(uint8_t*, uint8_t*);
 extern void loadkey_asm(uint8_t*);
 extern void loadIV_asm(uint8_t*);

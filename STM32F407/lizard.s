@@ -10,18 +10,6 @@
 // by Ivan Kozlov, 2018
 // https://github.com/KozlovIvan/LizardASM-arm-cortex-M4
 
-.global lizard_asm
-.type lizard_asm, %function
-lizard_asm:
-    // Remember the ABI: we must not destroy the values in r4 to r12.
-    // Arguments are placed in r0 and r1, the return value should go in r0.
-    // To be certain, we just push all of them onto the stack.
-    push {r4-r12, r14}
-    //TODO
-    // Finally, we restore the callee-saved register values and branch back.
-    pop {r4-r12, pc}
-    bx lr
-
 .global _construct_asm
 .type _construct_asm, %function
 _construct_asm:
@@ -29,7 +17,16 @@ _construct_asm:
     // Arguments are placed in r0 and r1, the return value should go in r0.
     // To be certain, we just push all of them onto the stack.
     push {r4-r12, r14}
-
+    bl _construct_z
+    //TODO LOOP
+    bl _initialization_phase1
+    //TODO phase2
+    //TODO phase3
+    bl keyadd_S_1
+    bl _initialization_phase4
+    ldr r4, =keystream_size
+    ldr r0, [r4]
+    bl keystreamGeneration_asm
     // Finally, we restore the callee-saved register values and branch back.
     pop {r4-r12, pc}
     bx lr
