@@ -58,17 +58,48 @@ _initialization_phase2:
     pop {r4-r12, pc}
     bx lr
 
-.global _initialization_phase3
-.type _initialization_phase3, %function
-_initialization_phase3:
+
+
+.global _initialization_phase3_B
+.type _initialization_phase3_B, %function
+_initialization_phase3_B:
     // Remember the ABI: we must not destroy the values in r4 to r12.
     // Arguments are placed in r0 and r1, the return value should go in r0.
     // To be certain, we just push all of them onto the stack.
     push {r4-r12, r14}
-    
+
+    movs   r4, #0
+loopsyloopb:
+    uxtb    r0, r4
+    adds    r4, #1
+    bl      keyadd_B
+    cmp     r4, #0x5A
+    bne     loopsyloopb
+
     // Finally, we restore the callee-saved register values and branch back.
     pop {r4-r12, pc}
     bx lr
+
+.global _initialization_phase3_S
+.type _initialization_phase3_S, %function
+_initialization_phase3_S:
+    // Remember the ABI: we must not destroy the values in r4 to r12.
+    // Arguments are placed in r0 and r1, the return value should go in r0.
+    // To be certain, we just push all of them onto the stack.
+    push {r0-r12, r14}
+    movs    r4, #0
+loopsyloops:
+    uxtb    r0, r4
+    adds    r4, #1
+    bl      keyadd_S
+    cmp     r4, #0x1E
+    bne     loopsyloops
+   
+    
+    // Finally, we restore the callee-saved register values and branch back.
+    pop {r0-r12, pc}
+    bx lr
+
 
 .global _initialization_phase4
 .type _initialization_phase4, %function
@@ -1232,6 +1263,17 @@ loopz:
     pop {r4-r12, pc}
     bx lr
 
+.global _construct_L
+.type _construct_L, %function
+_construct_L:
+    MOV.W   R2, #0x100
+    MOVS    R1, #0
+    LDR     R0, =_edata
+    B.W     memset
+
+
+
+
 .global mixing_p1
 .type mixing_p1, %function
 mixing_p1:
@@ -1243,5 +1285,4 @@ mixing_p1:
     str r0, [r4, r5]
     pop {r4-r12, pc}
     bx lr
-
 

@@ -20,37 +20,23 @@ void test3(void); // not part of the stream
 void test4(void); //not part of the stream
 
 
-extern void _construct_asm(uint8_t*, uint8_t*);
-extern void loadkey_asm(uint8_t*);
-extern void loadIV_asm(uint8_t*);
-extern void initRegisters_asm(void);
-extern void mixing_asm(void);
-extern void keyadd_asm(void);
-extern void diffusion_asm(void);
 extern uint8_t NFSR1_asm(void);
 extern uint8_t NFSR2_asm(void);
 extern void keystreamGeneration_asm(int);
 extern uint8_t* keystreamGenerationSpecification_asm(int);
 extern uint8_t a_asm(void);
-extern void keyadd_B(uint8_t);
-extern void keyadd_S(uint8_t);
 extern void _initialization_phase1(uint8_t*, uint8_t*);
 extern void _initialization_phase2(void);
-extern void _initialization_phase3(void);
+extern void _initialization_phase3_B(void);
+extern void _initialization_phase3_S(void);
 extern void _initialization_phase4(void);
 extern void keyadd_S_1(void);
-extern uint8_t keyadd_S_eor(uint8_t);
-extern uint8_t keyadd_B_eor(uint8_t);
-extern void keyadd_S_full(void);
 extern void _construct_z(void);
 extern void mixing_p1(void);
-
-
 
 //for asm
 uint32_t keystream_size = KEYSTREAM_SIZE;
 //for asm
-
 
 uint8_t keystream[KEYSTREAM_SIZE];
 uint8_t a257 = 0;
@@ -75,22 +61,14 @@ void _construct(uint8_t  *key, uint8_t *iv){
         T[i] = 0;
         Ttilde[i] = 0;
     }
-
-   //Phase 1
     _initialization_phase1(key, iv);
     //Phase 2
     for(;t<=127; ++t){
         mixing();
     }
-    //Phase 3
-    for(uint8_t i = 0; i <= 89; ++i){
-        keyadd_B(i);
-    }
-    for(uint8_t i = 0; i <= 29; ++i){
-        keyadd_S(i);
-    }
+    _initialization_phase3_B();
+    _initialization_phase3_S();
     keyadd_S_1();
-    //Phase 4
     _initialization_phase4();
     keystreamGeneration_asm(KEYSTREAM_SIZE);
 }
@@ -99,7 +77,7 @@ void _construct(uint8_t  *key, uint8_t *iv){
 
 void mixing(){
 
-    //z[t] = a_asm();
+    z[t] = a_asm();
     mixing_p1();
     for(int i = 0; i<=88; ++i) {
         B[t + 1][i] = B[t][i + 1];
@@ -107,7 +85,6 @@ void mixing(){
 
     B[t+1][89] = z[t] ^ NFSR2_asm();
 
-    //NFSR2_eor();
     for(int i = 0; i <= 29; ++i){
         S[t+1][i] = S[t][i+1];
     }
