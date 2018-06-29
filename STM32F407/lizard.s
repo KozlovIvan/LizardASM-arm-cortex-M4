@@ -61,6 +61,39 @@ _initialization_phase2:
     pop {r4-r12, pc}
     bx lr
 
+.global _initialization_phase3
+.type _initialization_phase3, %function
+_initialization_phase3:
+    // Remember the ABI: we must not destroy the values in r4 to r12.
+    // Arguments are placed in r0 and r1, the return value should go in r0.
+    // To be certain, we just push all of them onto the stack.
+    push {r4-r12, r14}
+    
+    // Finally, we restore the callee-saved register values and branch back.
+    pop {r4-r12, pc}
+    bx lr
+
+.global _initialization_phase4
+.type _initialization_phase4, %function
+_initialization_phase4:
+    // Remember the ABI: we must not destroy the values in r4 to r12.
+    // Arguments are placed in r0 and r1, the return value should go in r0.
+    // To be certain, we just push all of them onto the stack.
+    push {r4-r12, r14}
+    ldr r4, =t
+    mov r5, 129
+    str r5, [r4]
+ph4lp:
+    bl diffusion_asm
+    cmp r5, 256
+    add r5, r5, 1
+    str r5, [r4]
+    blt ph4lp
+    
+    // Finally, we restore the callee-saved register values and branch back.
+    pop {r4-r12, pc}
+    bx lr
+
 .global loadkey_asm
 .type loadkey_asm, %function
 loadkey_asm:

@@ -35,13 +35,15 @@ extern uint8_t a_asm(void);
 extern void keyadd_B(uint8_t);
 extern void keyadd_S(uint8_t);
 extern void _initialization_phase1(uint8_t*, uint8_t*);
+extern void _initialization_phase2(void);
+extern void _initialization_phase3(void);
+extern void _initialization_phase4(void);
 extern void keyadd_S_1(void);
 extern uint8_t keyadd_S_eor(uint8_t);
 extern uint8_t keyadd_B_eor(uint8_t);
 extern void keyadd_S_full(void);
 extern void _construct_z(void);
 extern void mixing_p1(void);
-extern void mixing_B_eor(void);
 
 
 
@@ -89,10 +91,7 @@ void _construct(uint8_t  *key, uint8_t *iv){
     }
     keyadd_S_1();
     //Phase 4
-    t=129;
-    for(; t<=256; ++t){
-        diffusion_asm();
-    }
+    _initialization_phase4();
     keystreamGeneration_asm(KEYSTREAM_SIZE);
 }
 
