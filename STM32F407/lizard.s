@@ -49,6 +49,18 @@ _initialization_phase1:
     pop {r4-r12, pc}
     bx lr
 
+.global _initialization_phase2
+.type _initialization_phase2, %function
+_initialization_phase2:
+    // Remember the ABI: we must not destroy the values in r4 to r12.
+    // Arguments are placed in r0 and r1, the return value should go in r0.
+    // To be certain, we just push all of them onto the stack.
+    push {r4-r12, r14}
+    
+    // Finally, we restore the callee-saved register values and branch back.
+    pop {r4-r12, pc}
+    bx lr
+
 .global loadkey_asm
 .type loadkey_asm, %function
 loadkey_asm:
@@ -1187,6 +1199,19 @@ loopz:
     add r7, r7, 1
     cmp r7, r5
     blt loopz
-
     pop {r4-r12, pc}
     bx lr
+
+.global mixing_p1
+.type mixing_p1, %function
+mixing_p1:
+    push {r4-r12, r14}
+    ldr r4, =z
+    ldr r5, =t
+    ldr r5, [r5]
+    bl a_asm
+    str r0, [r4, r5]
+    pop {r4-r12, pc}
+    bx lr
+
+
